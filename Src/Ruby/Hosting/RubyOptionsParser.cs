@@ -38,7 +38,7 @@ namespace IronRuby.Hosting {
         private RubyEncoding _defaultEncoding;
         private bool _disableRubyGems;
 
-#if DEBUG && !SILVERLIGHT
+#if FEATURE_CONSOLE_TRACE_LISTENER && DEBUG && !SILVERLIGHT
         private ConsoleTraceListener _debugListener;
 
         private sealed class CustomTraceFilter : TraceFilter {

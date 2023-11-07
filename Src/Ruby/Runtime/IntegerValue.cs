@@ -21,6 +21,7 @@ using Microsoft.Scripting.Math;
 using IronRuby.Builtins;
 using System.Diagnostics;
 using Microsoft.Scripting.Runtime;
+using System.Numerics;
 
 namespace IronRuby.Runtime {
     [ReflectionCached]

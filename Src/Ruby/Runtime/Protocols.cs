@@ -28,6 +28,7 @@ using Microsoft.Scripting.Runtime;
 using Microsoft.Scripting.Utils;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Numerics;
 
 namespace IronRuby.Runtime {
     /// <summary>

@@ -41,6 +41,7 @@ using Microsoft.Scripting.Runtime;
 using Microsoft.Scripting.Utils;
 using IronRuby.Compiler.Ast;
 using IronRuby.Runtime.Conversions;
+using System.Numerics;
 
 namespace IronRuby.Runtime {
     [ReflectionCached, CLSCompliant(false)]

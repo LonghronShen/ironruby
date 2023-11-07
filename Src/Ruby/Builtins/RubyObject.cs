@@ -160,7 +160,6 @@ namespace IronRuby.Builtins {
         public void Freeze() {
             GetInstanceData().Freeze();
         }
-
         #endregion
 
         #region Serialization
