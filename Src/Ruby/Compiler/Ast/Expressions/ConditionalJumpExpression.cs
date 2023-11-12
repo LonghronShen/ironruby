@@ -13,7 +13,7 @@
  *
  * ***************************************************************************/
 
-#if FEATURE_CORE_DLR
+#if !CLR2
 using MSA = System.Linq.Expressions;
 #else
 using MSA = Microsoft.Scripting.Ast;
@@ -27,7 +27,7 @@ namespace IronRuby.Compiler.Ast {
     using Ast = MSA.Expression;
 
     /// <summary>
-    /// Represents {condition} {and/or/&amp;&amp;/||} {jump-statement}, 
+    /// Represents {condition} {and/or/&&/||} {jump-statement}, 
     /// or {condition} ? {jump-statement} : {value}.
     /// </summary>
     public partial class ConditionalJumpExpression : Expression {

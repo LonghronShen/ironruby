@@ -40,6 +40,10 @@ namespace IronRuby.Compiler.Generation {
             return typeof(IRubyObject).IsAssignableFrom(type);
         }
 
+        public IFeatureBuilder/*!*/ MakeBuilder(TypeBuilder/*!*/ tb) {
+            return new RubyTypeBuilder(tb);
+        }
+
         public override int GetHashCode() {
             return typeof(RubyTypeFeature).GetHashCode();
         }
@@ -47,11 +51,5 @@ namespace IronRuby.Compiler.Generation {
         public override bool Equals(object obj) {
             return Object.ReferenceEquals(obj, Instance);
         }
-
-#if FEATURE_REFEMIT
-        public IFeatureBuilder/*!*/ MakeBuilder(TypeBuilder/*!*/ tb) {
-            return new RubyTypeBuilder(tb);
-        }
-#endif
     }
 }

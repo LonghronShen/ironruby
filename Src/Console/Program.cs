@@ -14,6 +14,7 @@
  * ***************************************************************************/
 
 using System;
+using System.Text;
 using System.Threading;
 using IronRuby.Builtins;
 using IronRuby.Hosting;
@@ -77,6 +78,9 @@ internal sealed class Host : RubyConsoleHost {
     [STAThread]
     [RubyStackTraceHidden]
     static int Main(string[] args) {
+#if NET
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+#endif
         return new Host().Run(args);
     }
 }

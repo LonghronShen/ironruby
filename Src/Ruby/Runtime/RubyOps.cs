@@ -13,7 +13,7 @@
  *
  * ***************************************************************************/
 
-#if FEATURE_CORE_DLR
+#if !CLR2
 using MSA = System.Linq.Expressions;
 #else
 using MSA = Microsoft.Scripting.Ast;
@@ -41,7 +41,6 @@ using Microsoft.Scripting.Runtime;
 using Microsoft.Scripting.Utils;
 using IronRuby.Compiler.Ast;
 using IronRuby.Runtime.Conversions;
-using System.Numerics;
 
 namespace IronRuby.Runtime {
     [ReflectionCached, CLSCompliant(false)]
@@ -285,7 +284,7 @@ namespace IronRuby.Runtime {
 
         [Emitted]
         public static Proc/*!*/ DefineBlock(RubyScope/*!*/ scope, object self, BlockDispatcher/*!*/ dispatcher, object/*!*/ clrMethod) {
-#if !WIN8
+#if !WIN8 && !NETSTANDARD
             // DLR closures should not be used:
             Debug.Assert(!(((Delegate)clrMethod).Target is Closure) || ((Closure)((Delegate)clrMethod).Target).Locals == null);
 #endif
@@ -294,7 +293,7 @@ namespace IronRuby.Runtime {
 
         [Emitted]
         public static Proc/*!*/ DefineLambda(RubyScope/*!*/ scope, object self, BlockDispatcher/*!*/ dispatcher, object/*!*/ clrMethod) {
-#if !WIN8
+#if !WIN8 && !NETSTANDARD
             // DLR closures should not be used:
             Debug.Assert(!(((Delegate)clrMethod).Target is Closure) || ((Closure)((Delegate)clrMethod).Target).Locals == null);
 #endif
@@ -318,7 +317,7 @@ namespace IronRuby.Runtime {
             proc.LocalScope.RubyContext.RegisterShutdownHandler(proc);
         }
 
-        #endregion
+#endregion
 
         #region Yield: TODO: generate
 
@@ -2506,7 +2505,7 @@ namespace IronRuby.Runtime {
             }
         }
 #endif
-        #endregion
+#endregion
 
         #region Delegates, Events
 

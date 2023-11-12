@@ -13,79 +13,109 @@
  *
  * ***************************************************************************/
 
-#if FEATURE_CORE_DLR
+#if !CLR2
 using MSA = System.Linq.Expressions;
 #else
 using MSA = Microsoft.Scripting.Ast;
 #endif
 
+using System;
 using System.Reflection;
 using IronRuby.Builtins;
 using IronRuby.Compiler;
 using Microsoft.Scripting.Utils;
 using Microsoft.Scripting.Actions.Calls;
 
-namespace IronRuby.Runtime.Calls {
+namespace IronRuby.Runtime.Calls
+{
     using Ast = MSA.Expression;
 
     /// <summary>
     /// A group of CLR methods that are treated as a single Ruby method.
     /// </summary>
-    public class RubyMethodGroupInfo : RubyMethodGroupBase {
+    public class RubyMethodGroupInfo : RubyMethodGroupBase
+    {
         // True: The group contains only static methods and can only be called statically (with no receiver).
         // False: The group contain instance methods and/or extension methods, or operators.
         private readonly bool _isStatic;
 
+        //public RubyMethodGroupInfo[] OverloadOwners { get; private set; }
+
         internal RubyMethodGroupInfo(OverloadInfo/*!*/[]/*!*/ methods, RubyModule/*!*/ declaringModule, bool isStatic)
-            : base(methods, RubyMemberFlags.Public, declaringModule) {
+            : base(methods, RubyMemberFlags.Public, declaringModule)
+        {
             _isStatic = isStatic;
+            //OverloadOwners = new RubyMethodGroupInfo[0];
         }
+
+        //internal RubyMethodGroupInfo(MethodBase[] overloads, RubyModule declaringModule, RubyMethodGroupInfo[] overloadOwners, bool isStatic)
+        //    : this(ReflectionOverloadInfo.CreateArray(overloads), declaringModule, isStatic)
+        //{
+        //    OverloadOwners = overloadOwners;
+        //}
 
         // copy ctor
         private RubyMethodGroupInfo(RubyMethodGroupInfo/*!*/ info, RubyMemberFlags flags, RubyModule/*!*/ module)
-            : base(info.MethodBases, flags, module) {
+            : base(info.MethodBases, flags, module)
+        {
             _isStatic = info._isStatic;
         }
 
         // copy ctor
         private RubyMethodGroupInfo(RubyMethodGroupInfo/*!*/ info, OverloadInfo/*!*/[] methods)
-            : base(methods, info.Flags, info.DeclaringModule) {
+            : base(methods, info.Flags, info.DeclaringModule)
+        {
             _isStatic = info._isStatic;
         }
 
-        protected internal override RubyMemberInfo/*!*/ Copy(RubyMemberFlags flags, RubyModule/*!*/ module) {
+        protected internal override RubyMemberInfo/*!*/ Copy(RubyMemberFlags flags, RubyModule/*!*/ module)
+        {
             return new RubyMethodGroupInfo(this, flags, module);
         }
 
-        protected override RubyMemberInfo/*!*/ Copy(OverloadInfo/*!*/[]/*!*/ methods) {
+        protected override RubyMemberInfo/*!*/ Copy(OverloadInfo/*!*/[]/*!*/ methods)
+        {
             return new RubyMethodGroupInfo(this, methods);
         }
 
-        internal override SelfCallConvention CallConvention {
+        internal override SelfCallConvention CallConvention
+        {
             get { return _isStatic ? SelfCallConvention.NoSelf : SelfCallConvention.SelfIsInstance; }
         }
 
-        internal bool IsStatic {
+        internal bool IsStatic
+        {
             get { return _isStatic; }
         }
 
-        internal override bool ImplicitProtocolConversions {
+        internal override bool ImplicitProtocolConversions
+        {
             get { return true; }
         }
 
-        public override MemberInfo/*!*/[]/*!*/ GetMembers() {
+        public override MemberInfo/*!*/[]/*!*/ GetMembers()
+        {
             return ArrayUtils.ConvertAll(MethodBases, (o) => o.ReflectionInfo);
         }
-        
+
+        internal virtual void CachedInGroup(RubyMethodGroupInfo result)
+        {
+            //ArrayUtils.Append(this.OverloadOwners, result);
+        }
+
         #region Dynamic Call
 
-        internal override void BuildCallNoFlow(MetaObjectBuilder/*!*/ metaBuilder, CallArguments/*!*/ args, string/*!*/ name) {
+        internal override void BuildCallNoFlow(MetaObjectBuilder/*!*/ metaBuilder, CallArguments/*!*/ args, string/*!*/ name)
+        {
             var visibleOverloads = GetVisibleOverloads(args, MethodBases, false);
-            if (visibleOverloads.Count == 0) {
+            if (visibleOverloads.Count == 0)
+            {
                 metaBuilder.SetError(Methods.MakeClrProtectedMethodCalledError.OpCall(
                     args.MetaContext.Expression, args.MetaTarget.Expression, Ast.Constant(name)
                 ));
-            } else {
+            }
+            else
+            {
                 BuildCallNoFlow(metaBuilder, args, name, visibleOverloads, CallConvention, ImplicitProtocolConversions);
             }
         }

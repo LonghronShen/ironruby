@@ -13,7 +13,7 @@
  *
  * ***************************************************************************/
 
-#if FEATURE_CORE_DLR
+#if !CLR2
 using MSA = System.Linq.Expressions;
 #else
 using MSA = Microsoft.Scripting.Ast;
@@ -37,7 +37,6 @@ using AstUtils = Microsoft.Scripting.Ast.Utils;
 namespace IronRuby.Compiler.Ast {
     using Ast = MSA.Expression;
     using AstExpressions = ReadOnlyCollectionBuilder<MSA.Expression>;
-    using System.Reflection;
 
     public static class AstFactory {
 
@@ -105,32 +104,30 @@ namespace IronRuby.Compiler.Ast {
         }
 
         internal static MSA.Expression/*!*/ CallDelegate(Delegate/*!*/ method, MSA.Expression[]/*!*/ arguments) {
-            MethodInfo methodInfo = method.GetMethodInfo();
-
             // We prefer to peek inside the delegate and call the target method directly. However, we need to
             // exclude DynamicMethods since Delegate.Method returns a dummy MethodInfo, and we cannot emit a call to it.
-            if (methodInfo.DeclaringType == null || !methodInfo.DeclaringType.IsPublic() || !methodInfo.IsPublic) {
+            if (method.Method.DeclaringType == null || !method.Method.DeclaringType.IsPublic || !method.Method.IsPublic) {
                 // do not inline:
                 return Ast.Call(AstUtils.Constant(method), method.GetType().GetMethod("Invoke"), arguments);
             } 
             
             if (method.Target != null) {
                 // inline a closed static delegate:
-                if (methodInfo.IsStatic) {
-                    return Ast.Call(null, method.GetMethodInfo(), ArrayUtils.Insert(AstUtils.Constant(method.Target), arguments));
+                if (method.Method.IsStatic) {
+                    return Ast.Call(null, method.Method, ArrayUtils.Insert(AstUtils.Constant(method.Target), arguments));
                 } 
 
                 // inline a closed instance delegate:
-                return Ast.Call(AstUtils.Constant(method.Target), methodInfo, arguments);
+                return Ast.Call(AstUtils.Constant(method.Target), method.Method, arguments);
             }
 
             // inline an open static delegate:
-            if (methodInfo.IsStatic) {
-                return Ast.Call(null, methodInfo, arguments);
+            if (method.Method.IsStatic) {
+                return Ast.Call(null, method.Method, arguments);
             } 
          
             // inline an open instance delegate:
-            return Ast.Call(arguments[0], methodInfo, ArrayUtils.RemoveFirst(arguments));
+            return Ast.Call(arguments[0], method.Method, ArrayUtils.RemoveFirst(arguments));
         }
 
         internal static MSA.Expression/*!*/ YieldExpression(

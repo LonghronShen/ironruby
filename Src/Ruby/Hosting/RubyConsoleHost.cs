@@ -12,7 +12,7 @@
  *
  *
  * ***************************************************************************/
-#if FEATURE_FULL_CONSOLE
+
 using System;
 using System.IO;
 using System.Threading;
@@ -49,11 +49,14 @@ namespace IronRuby.Hosting {
         }
 
         protected override ConsoleOptions ParseOptions(string[] args, ScriptRuntimeSetup runtimeSetup, LanguageSetup languageSetup) {
+#if !SILVERLIGHT
             languageSetup.Options["ApplicationBase"] = AppDomain.CurrentDomain.BaseDirectory;
+#endif
             return base.ParseOptions(args, runtimeSetup, languageSetup);
         }
 
         private static void SetHomeEnvironmentVariable() {
+#if !SILVERLIGHT
             try {
                 PlatformAdaptationLayer platform = PlatformAdaptationLayer.Default;
                 string homeDir = RubyUtils.GetHomeDirectory(platform);
@@ -64,7 +67,7 @@ namespace IronRuby.Hosting {
                     throw;
                 }
             }
+#endif
         }
     }
 }
-#endif

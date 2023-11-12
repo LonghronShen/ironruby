@@ -25,7 +25,7 @@ namespace IronRuby.Runtime.Calls {
     internal sealed class RubyOverloadGroupInfo : RubyMethodGroupInfo {
         // A method group that owns each overload or null if all overloads are owned by this group.
         // A null member also marks an overload owned by this group.
-        private readonly RubyOverloadGroupInfo[] _overloadOwners; // immutable
+        private readonly RubyMethodGroupInfo[] _overloadOwners; // immutable
 
         #region Mutable state guarded by ClassHierarchyLock
 
@@ -35,18 +35,23 @@ namespace IronRuby.Runtime.Calls {
         #endregion
 
         internal RubyOverloadGroupInfo(OverloadInfo/*!*/[]/*!*/ methods, RubyModule/*!*/ declaringModule,
-            RubyOverloadGroupInfo/*!*/[] overloadOwners, bool isStatic)
+            RubyMethodGroupInfo/*!*/[] overloadOwners, bool isStatic)
             : base(methods, declaringModule, isStatic) {
             Debug.Assert(overloadOwners == null || methods.Length == overloadOwners.Length);
 
             _overloadOwners = overloadOwners;
         }
 
+        internal RubyOverloadGroupInfo(MethodBase[] overloads, RubyModule declaringModule, RubyMethodGroupInfo[] overloadOwners, bool isStatic) 
+            : this(ReflectionOverloadInfo.CreateArray(overloads), declaringModule, overloadOwners, isStatic)
+        {
+        }
+
         internal override bool IsRubyMember {
             get { return false; }
         }
 
-        internal RubyOverloadGroupInfo[] OverloadOwners {
+        internal RubyMethodGroupInfo[] OverloadOwners {
             get { return _overloadOwners; }
         }
 
@@ -56,7 +61,7 @@ namespace IronRuby.Runtime.Calls {
 
         // Called on this group whenever other group includes some overloads from this group.
         // Updates maxCachedOverloadLevel - the max. class hierarchy level which caches an overload owned by this group.
-        internal void CachedInGroup(RubyMethodGroupInfo/*!*/ group) {
+        internal override void CachedInGroup(RubyMethodGroupInfo/*!*/ group) {
             Context.RequiresClassHierarchyLock();
 
             int groupLevel = ((RubyClass)group.DeclaringModule).Level;

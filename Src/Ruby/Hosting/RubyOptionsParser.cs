@@ -38,8 +38,8 @@ namespace IronRuby.Hosting {
         private RubyEncoding _defaultEncoding;
         private bool _disableRubyGems;
 
-#if FEATURE_CONSOLE_TRACE_LISTENER && DEBUG && !SILVERLIGHT
-        private ConsoleTraceListener _debugListener;
+#if DEBUG && !SILVERLIGHT
+        private TraceListener _debugListener;
 
         private sealed class CustomTraceFilter : TraceFilter {
             public readonly Dictionary<string, bool>/*!*/ Categories = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
@@ -63,13 +63,34 @@ namespace IronRuby.Hosting {
             string[] categories = arg.Split(new[] { ';', ','}, StringSplitOptions.RemoveEmptyEntries);
 
             if (categories.Length == 0 && !enable) {
-                Debug.Listeners.Clear();
+#if NETSTANDARD
+                Trace
+#else
+                Debug
+#endif
+                    .Listeners
+                    .Clear();
                 return;
             }
 
             if (_debugListener == null) {
-                _debugListener = new ConsoleTraceListener { IndentSize = 4, Filter = new CustomTraceFilter { EnableAll = categories.Length == 0 } };
-                Debug.Listeners.Add(_debugListener);
+                _debugListener =
+                    new ConsoleTraceListener
+                    { 
+                        IndentSize = 4, 
+                        Filter = new CustomTraceFilter 
+                        { 
+                            EnableAll = categories.Length == 0 
+                        }
+                    };
+
+#if NETSTANDARD
+                Trace
+#else
+                Debug
+#endif
+                    .Listeners
+                    .Add(_debugListener);
             } 
          
             foreach (var category in categories) {
@@ -78,7 +99,7 @@ namespace IronRuby.Hosting {
         }
 #endif
 
-        private static string[] GetPaths(string input) {
+                private static string[] GetPaths(string input) {
             string[] paths = StringUtils.Split(input, new char[] { Path.PathSeparator }, Int32.MaxValue, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < paths.Length; i++) {
                 // Trim any occurrances of "

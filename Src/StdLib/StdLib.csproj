@@ -1,0 +1,19 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras">
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;net35;net40;portable-net45+win8+wpa81;portable-net403+sl5+win8+wpa81+wp8</TargetFrameworks>
+		<AssemblyName>IronRuby.StdLib</AssemblyName>
+
+		<PackageId>IronRuby.StdLib</PackageId>
+
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<NoWarn>NU5128</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Content Include="./ironruby/**/*" Pack="true" PackagePath="\Content\Lib\ironruby" CopyToOutputDirectory="PreserveNewest" />
+		<Content Include="./ruby/**/*" Pack="true" PackagePath="\Content\Lib\ruby" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
+</Project>

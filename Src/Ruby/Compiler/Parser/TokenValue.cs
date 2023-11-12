@@ -23,7 +23,6 @@ using IronRuby.Compiler.Ast;
 using System.Diagnostics;
 using Microsoft.Scripting.Utils;
 using System.Runtime.InteropServices;
-using System.Numerics;
 
 namespace IronRuby.Compiler {
     [StructLayout(LayoutKind.Explicit)]

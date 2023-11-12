@@ -1,4 +1,0 @@
-namespace Microsoft.Scripting.Math
-{
-
-}

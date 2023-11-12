@@ -19,19 +19,25 @@ using IronRuby.Runtime;
 using System.Windows.Forms;
 using Microsoft.Scripting.Hosting.Shell;
 using Microsoft.Scripting.Hosting;
+using System.Text;
 
-internal sealed class Host : RubyConsoleHost {
-    protected override ConsoleOptions ParseOptions(string/*!*/[]/*!*/ args, ScriptRuntimeSetup/*!*/ runtimeSetup, LanguageSetup/*!*/ languageSetup) {
+internal sealed class Host : RubyConsoleHost
+{
+    protected override ConsoleOptions ParseOptions(string/*!*/[]/*!*/ args, ScriptRuntimeSetup/*!*/ runtimeSetup, LanguageSetup/*!*/ languageSetup)
+    {
         var rubyOptions = (RubyConsoleOptions)base.ParseOptions(args, runtimeSetup, languageSetup);
-        if (rubyOptions == null) {
+        if (rubyOptions == null)
+        {
             return null;
         }
 
-        if (rubyOptions.ChangeDirectory != null) {
+        if (rubyOptions.ChangeDirectory != null)
+        {
             Environment.CurrentDirectory = rubyOptions.ChangeDirectory;
         }
 
-        if (rubyOptions.Introspection || rubyOptions.Command == null && rubyOptions.FileName == null) {
+        if (rubyOptions.Introspection || rubyOptions.Command == null && rubyOptions.FileName == null)
+        {
             PrintHelp();
             return null;
         }
@@ -39,17 +45,24 @@ internal sealed class Host : RubyConsoleHost {
         return rubyOptions;
     }
 
-    protected override void ReportInvalidOption(InvalidOptionException e) {
+    protected override void ReportInvalidOption(InvalidOptionException e)
+    {
         MessageBox.Show(e.Message);
     }
 
     [STAThread]
     [RubyStackTraceHidden]
-    static int Main(string[] args) {
+    static int Main(string[] args)
+    {
+#if NET
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+#endif
+
         return new Host().Run(args);
     }
 
-    protected override void PrintHelp() {
+    protected override void PrintHelp()
+    {
         MessageBox.Show(GetHelp(), "IronRuby Window Console Help");
     }
 }

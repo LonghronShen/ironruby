@@ -13,7 +13,7 @@
  *
  * ***************************************************************************/
 
-#if FEATURE_CORE_DLR
+#if !CLR2
 using System.Linq.Expressions;
 #else
 using Microsoft.Scripting.Ast;

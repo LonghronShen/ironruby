@@ -35,7 +35,7 @@ namespace IronRuby.Runtime {
                 // We use null as a missing constant sentinel and the real null is wrapped in a singleton WeakRef:
                 WeakValue = ConstantSiteCache.WeakNull;
             } else {
-                switch (value.GetType().GetTypeCode()) {
+                switch (Type.GetTypeCode(value.GetType())) {
                     case TypeCode.Object:
                         RubyModule module = value as RubyModule;
                         if (module != null) {

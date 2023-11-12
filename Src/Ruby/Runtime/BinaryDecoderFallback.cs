@@ -12,7 +12,7 @@
  *
  *
  * ***************************************************************************/
-#if FEATURE_ENCODING
+#if !SILVERLIGHT
 
 using System;
 using System.Collections.Generic;

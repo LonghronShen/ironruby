@@ -13,7 +13,7 @@
  *
  * ***************************************************************************/
 
-#if FEATURE_CORE_DLR
+#if !CLR2
 using MSA = System.Linq.Expressions;
 #else
 using MSA = Microsoft.Scripting.Ast;
@@ -70,10 +70,10 @@ namespace IronRuby.Compiler.Ast {
             _profiler = context.RubyOptions.Profile ? Profiler.Instance : null;
             _savingToDisk = context.RubyOptions.SavePath != null;
             _printInteractiveResult = printInteractiveResult;
-#if FEATURE_REFEMIT && FEATURE_FILESYSTEM
-            _debugCompiler = Snippets.Shared.SaveSnippets;
-#else
+#if SILVERLIGHT
             _debugCompiler = false;
+#else
+            _debugCompiler = Snippets.Shared.SaveSnippets;
 #endif
         }
 
@@ -814,7 +814,7 @@ namespace IronRuby.Compiler.Ast {
         }
 
         internal static bool CanAssign(Type/*!*/ to, Type/*!*/ from) {
-            return to.IsAssignableFrom(from) && (to.IsValueType() == from.IsValueType());
+            return to.IsAssignableFrom(from) && (to.IsValueType == from.IsValueType);
         }
 
         internal MSA.Expression/*!*/ AddReturnTarget(MSA.Expression/*!*/ expression) {

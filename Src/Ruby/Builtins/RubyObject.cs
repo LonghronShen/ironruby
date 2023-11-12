@@ -15,6 +15,7 @@
 
 using System.Diagnostics;
 using System.Runtime.Serialization;
+using System.Security.Permissions;
 using IronRuby.Compiler.Generation;
 using IronRuby.Runtime;
 using IronRuby.Runtime.Calls;
@@ -160,11 +161,12 @@ namespace IronRuby.Builtins {
         public void Freeze() {
             GetInstanceData().Freeze();
         }
+
         #endregion
 
         #region Serialization
 
-#if FEATURE_SERIALIZATION
+#if !SILVERLIGHT // serialization
         protected RubyObject(SerializationInfo/*!*/ info, StreamingContext context) {
             RubyOps.DeserializeObject(out _instanceData, out _immediateClass, info);
         }

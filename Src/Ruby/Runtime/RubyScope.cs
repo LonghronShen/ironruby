@@ -1070,6 +1070,11 @@ var closureScope = scope as RubyClosureScope;
             return scope;
         }
 
+        internal static object ScopeMethodMissing(RubyContext rubyContext, Scope self, BlockParam block, object value, RubySymbol symbol, object[] args)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

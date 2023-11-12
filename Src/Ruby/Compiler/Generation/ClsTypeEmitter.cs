@@ -12,8 +12,8 @@
  *
  *
  * ***************************************************************************/
-#if FEATURE_REFEMIT
-#if FEATURE_CORE_DLR
+
+#if !CLR2
 using System.Linq.Expressions;
 #else
 using Microsoft.Scripting.Ast;
@@ -22,7 +22,6 @@ using Microsoft.Scripting.Ast;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Dynamic;
@@ -95,9 +94,9 @@ namespace IronRuby.Compiler.Generation {
             var added = new Dictionary<Key<string, MethodSignatureInfo>, MethodInfo>();
 
             string defaultGetter, defaultSetter;
-            DefaultMemberAttribute defaultMember = type.GetTypeInfo().GetCustomAttributes<DefaultMemberAttribute>(false).SingleOrDefault();
-            if (defaultMember != null) {
-                string indexer = defaultMember.MemberName;
+            object[] attrs = type.GetCustomAttributes(typeof(DefaultMemberAttribute), false);
+            if (attrs.Length == 1) {
+                string indexer = ((DefaultMemberAttribute)attrs[0]).MemberName;
                 defaultGetter = "get_" + indexer;
                 defaultSetter = "set_" + indexer;
             } else {
@@ -105,7 +104,7 @@ namespace IronRuby.Compiler.Generation {
             }
 
             MethodInfo overridden;
-            var methods = type.GetInheritedMethods(flattenHierarchy: true);
+            MethodInfo[] methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
             foreach (MethodInfo mi in methods) {
                 var key = Key.Create(mi.Name, new MethodSignatureInfo(mi));
@@ -202,7 +201,7 @@ namespace IronRuby.Compiler.Generation {
             var callTarget = il.DeclareLocal(typeof(object));
             il.Emit(OpCodes.Stloc, callTarget);
 
-            if (toType.IsGenericParameter && toType.GetTypeInfo().DeclaringMethod != null) {
+            if (toType.IsGenericParameter && toType.DeclaringMethod != null) {
                 MethodInfo siteFactory = GetGenericConversionSiteFactory(toType);
                 Debug.Assert(siteFactory.GetParameters().Length == 0 && typeof(CallSite).IsAssignableFrom(siteFactory.ReturnType));
 
@@ -213,7 +212,7 @@ namespace IronRuby.Compiler.Generation {
 
                 // Emit the site invoke
                 il.Emit(OpCodes.Ldloc, siteVar);
-                FieldInfo target = siteVar.LocalType.GetDeclaredField("Target");
+                FieldInfo target = siteVar.LocalType.GetField("Target");
                 il.EmitFieldGet(target);
                 il.Emit(OpCodes.Ldloc, siteVar);
 
@@ -228,7 +227,7 @@ namespace IronRuby.Compiler.Generation {
 
                 // Emit the site invoke
                 il.EmitFieldGet(site);
-                FieldInfo target = site.FieldType.GetDeclaredField("Target");
+                FieldInfo target = site.FieldType.GetField("Target");
                 il.EmitFieldGet(target);
                 il.EmitFieldGet(site);
 
@@ -296,15 +295,12 @@ namespace IronRuby.Compiler.Generation {
             if (_cctor != null) {
                 if (_dynamicSiteFactories.Count > 0) { 
                     MethodBuilder createSitesImpl = _tb.DefineMethod(
-                        "<create_dynamic_sites>", MethodAttributes.Private | MethodAttributes.Static, typeof(void), ReflectionUtils.EmptyTypes
+                        "<create_dynamic_sites>", MethodAttributes.Private | MethodAttributes.Static, typeof(void), Type.EmptyTypes
                     );
 
                     _dynamicSiteFactories.Add(Expression.Empty());
-                    var lambda = Expression.Lambda(Expression.Block(_dynamicSiteFactories));
-#if WIN8
-                    ((dynamic)lambda).CompileToMethod(createSitesImpl);
-#else
-                    lambda.CompileToMethod(createSitesImpl);
+#if !NETSTANDARD
+                    Expression.Lambda(Expression.Block(_dynamicSiteFactories)).CompileToMethod(createSitesImpl);
 #endif
                     _cctor.EmitCall(createSitesImpl);
 
@@ -313,8 +309,12 @@ namespace IronRuby.Compiler.Generation {
 
                 _cctor.Emit(OpCodes.Ret);
             }
+#if NETSTANDARD
+            throw new NotSupportedException();
+#else
             Type result = _tb.CreateType();
             return result;
+#endif
         }
 
         internal protected ILGen CreateILGen(ILGenerator il) {
@@ -322,12 +322,8 @@ namespace IronRuby.Compiler.Generation {
             return new ILGen(il);
         }
 
-#if WIN8 // TODO: what is ReservedMask?
-        protected const MethodAttributes MethodAttributesToEraseInOveride = MethodAttributes.Abstract | (MethodAttributes)0xD000;
-#else
         protected const MethodAttributes MethodAttributesToEraseInOveride = MethodAttributes.Abstract | MethodAttributes.ReservedMask;
-#endif
-
+        
         protected ILGen DefineMethodOverride(MethodAttributes extra, MethodInfo decl, out MethodBuilder impl) {
             impl = ReflectionUtils.DefineMethodOverride(_tb, extra, decl);
             return CreateILGen(impl.GetILGenerator());
@@ -343,11 +339,11 @@ namespace IronRuby.Compiler.Generation {
         public static void CopyParameterAttributes(ParameterInfo from, ParameterBuilder to) {
             if (from.IsDefined(typeof(ParamArrayAttribute), false)) {
                 to.SetCustomAttribute(new CustomAttributeBuilder(
-                    typeof(ParamArrayAttribute).GetConstructor(ReflectionUtils.EmptyTypes), ArrayUtils.EmptyObjects)
+                    typeof(ParamArrayAttribute).GetConstructor(Type.EmptyTypes), ArrayUtils.EmptyObjects)
                 );
             } else if (from.IsDefined(typeof(ParamDictionaryAttribute), false)) {
                 to.SetCustomAttribute(new CustomAttributeBuilder(
-                    typeof(ParamDictionaryAttribute).GetConstructor(ReflectionUtils.EmptyTypes), ArrayUtils.EmptyObjects)
+                    typeof(ParamDictionaryAttribute).GetConstructor(Type.EmptyTypes), ArrayUtils.EmptyObjects)
                 );
             }
 
@@ -393,7 +389,7 @@ namespace IronRuby.Compiler.Generation {
             // Emit the site invoke
             //
             il.EmitFieldGet(site);
-            FieldInfo target = siteType.GetDeclaredField("Target");
+            FieldInfo target = siteType.GetField("Target");
             il.EmitFieldGet(target);
             il.EmitFieldGet(site);
 
@@ -436,7 +432,7 @@ namespace IronRuby.Compiler.Generation {
         private readonly int _index;
 
         private ReturnFixer(LocalBuilder/*!*/ reference, ParameterInfo/*!*/ parameter, int index) {
-            Debug.Assert(reference.LocalType.IsGenericType() && reference.LocalType.GetGenericTypeDefinition() == typeof(StrongBox<>));
+            Debug.Assert(reference.LocalType.IsGenericType && reference.LocalType.GetGenericTypeDefinition() == typeof(StrongBox<>));
             Debug.Assert(parameter.ParameterType.IsByRef);
 
             _parameter = parameter;
@@ -447,7 +443,7 @@ namespace IronRuby.Compiler.Generation {
         public void FixReturn(ILGen/*!*/ il) {
             il.EmitLoadArg(_index);
             il.Emit(OpCodes.Ldloc, _reference);
-            il.EmitFieldGet(_reference.LocalType.GetDeclaredField("Value"));
+            il.EmitFieldGet(_reference.LocalType.GetField("Value"));
             il.EmitStoreValueIndirect(_parameter.ParameterType.GetElementType());
         }
 
@@ -469,4 +465,3 @@ namespace IronRuby.Compiler.Generation {
         }
     }
 }
-#endif

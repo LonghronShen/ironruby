@@ -1,0 +1,50 @@
+name: Build
+
+on: [push, pull_request]
+
+env:
+  RELEASE_VERSION: "1.${{ github.run_number }}.${{ github.run_attempt }}"
+
+jobs:
+  build:
+    name: windows-msbuild
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET Core @ Latest
+        uses: actions/setup-dotnet@v1
+        with:
+          source-url: https://nuget.pkg.github.com/${{github.repository_owner}}/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{ github.token }}
+
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64
+
+      - name: .NET Restore
+        run: |
+          msbuild /p:RestorePackagesConfig=true /p:Configuration=Release /p:Platform="Any CPU" /t:restore
+
+      - name: Build
+        run: |
+          msbuild /p:Configuration=Release /p:Platform="Any CPU" /m
+
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: IronRuby.nupkgs
+          path: Src/**/*.nupkg
+
+      - name: Push generated package to GitHub registry
+        shell: bash
+        run: find . -name '*.nupkg' | xargs -i dotnet nuget push --skip-duplicate {}
+        env:
+          NUGET_AUTH_TOKEN: ${{ github.token }}
+
+      - name: Push generated package to NuGet.org
+        shell: bash
+        run: find . -name '*.nupkg' | xargs -i dotnet nuget push --skip-duplicate -s "https://api.nuget.org/v3/index.json" -k "$NUGET_AUTH_TOKEN" {}
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.NUGET_API_KEY }}

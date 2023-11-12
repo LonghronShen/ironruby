@@ -13,7 +13,7 @@
  *
  * ***************************************************************************/
 
-#if FEATURE_CORE_DLR
+#if !CLR2
 using MSA = System.Linq.Expressions;
 #else
 using MSA = Microsoft.Scripting.Ast;
@@ -72,16 +72,11 @@ namespace IronRuby.Runtime {
         public const string BinDirEnvironmentVariable = "IRONRUBY_11";
 
         // IronRuby:
-        public const string IronRubyInformationalVersion = "1.1.3";
-//#if !SILVERLIGHT
-//        public const string/*!*/ IronRubyVersionString = "1.1.3.0";
-//        public static readonly Version IronRubyVersion = new Version(1, 1, 3, 0);
-//#else
-//        public const string/*!*/ IronRubyVersionString = "1.1.1302.0";
-//        public static readonly Version IronRubyVersion = new Version(1, 1, 1302, 0);
-        
-//#endif
-        internal const string/*!*/ IronRubyDisplayName = "IronRuby";
+        public static readonly string IronRubyInformationalVersion = CurrentVersion.AssemblyInformationalVersion;
+        public static readonly string/*!*/ IronRubyVersionString = CurrentVersion.AssemblyVersion;
+        public static readonly Version IronRubyVersion = CurrentVersion.Version;
+
+        internal static readonly string/*!*/ IronRubyDisplayName = CurrentVersion.DisplayName;
         internal const string/*!*/ IronRubyNames = "IronRuby;Ruby;rb";
         internal const string/*!*/ IronRubyFileExtensions = ".rb";
 
@@ -285,7 +280,7 @@ namespace IronRuby.Runtime {
         
         internal RubyClass ComObjectClass {
             get {
-#if !SILVERLIGHT // COM
+#if !SILVERLIGHT && FEATURE_COM // COM
                 if (_comObjectClass == null) {
                     GetOrCreateClass(TypeUtils.ComObjectType);
                 }
@@ -396,7 +391,7 @@ namespace IronRuby.Runtime {
         private EqualityComparer _equalityComparer;
 
         public override Version LanguageVersion {
-            get { return new Version(IronRuby.CurrentVersion.Major, IronRuby.CurrentVersion.Minor, IronRuby.CurrentVersion.Micro); }
+            get { return IronRubyVersion; }
         }
 
         public override Guid LanguageGuid {
@@ -593,7 +588,8 @@ namespace IronRuby.Runtime {
                 obj.SetConstantNoMutateNoLock("PLATFORM", platform);
                 obj.SetConstantNoMutateNoLock("RELEASE_DATE", releaseDate);
 
-                obj.SetConstantNoMutateNoLock("IRONRUBY_VERSION", MutableString.CreateAscii(IronRuby.CurrentVersion.DisplayVersion));
+                obj.SetConstantNoMutateNoLock("IRONRUBY_VERSION", MutableString.CreateAscii(RubyContext.IronRubyVersionString));
+                obj.SetConstantNoMutateNoLock("IRONRUBY_INFORMATIONAL_VERSION", MutableString.CreateAscii(RubyContext.IronRubyInformationalVersion));
 
                 obj.SetConstantNoMutateNoLock("STDIN", StandardInput);
                 obj.SetConstantNoMutateNoLock("STDOUT", StandardOutput);
@@ -612,7 +608,7 @@ namespace IronRuby.Runtime {
         }
 
         public static string/*!*/ MakeDescriptionString() {
-            return String.Format(CultureInfo.InvariantCulture, "IronRuby {0} on {1}", IronRuby.CurrentVersion.DisplayVersion, MakeRuntimeDesriptionString());
+            return String.Format(CultureInfo.InvariantCulture, "IronRuby {0} on {1}", IronRubyInformationalVersion, MakeRuntimeDesriptionString());
         }
 
         internal static string MakeRuntimeDesriptionString() {
@@ -696,7 +692,7 @@ namespace IronRuby.Runtime {
             //
 
             // only Object should expose CLR methods:
-            TypeTracker objectTracker = TypeTracker.GetTypeTracker(typeof(object));
+            TypeTracker objectTracker = ReflectionCache.GetTypeTracker(typeof(object));
 
             var moduleFactories = new Delegate[] {
                 new Func<RubyScope, BlockParam, RubyClass, object>(RubyModule.CreateAnonymousModule),
@@ -1341,7 +1337,7 @@ namespace IronRuby.Runtime {
         }
 
         private static TypeTracker GetLibraryModuleTypeTracker(Type/*!*/ type, ModuleRestrictions restrictions) {
-            return (restrictions & ModuleRestrictions.NoUnderlyingType) != 0 ? null : TypeTracker.GetTypeTracker(type);
+            return (restrictions & ModuleRestrictions.NoUnderlyingType) != 0 ? null : ReflectionCache.GetTypeTracker(type);
         }
 
         #endregion
@@ -2989,7 +2985,7 @@ namespace IronRuby.Runtime {
             if (obj is IRubyDynamicMetaObjectProvider) {
                 return ArrayUtils.EmptyStrings;
             }
-#if !SILVERLIGHT // COM
+#if !SILVERLIGHT && FEATURE_COM // COM
             if (TypeUtils.IsComObject(obj)) {
                 return new List<string>(Microsoft.Scripting.ComInterop.ComBinder.GetDynamicMemberNames(obj));
             }

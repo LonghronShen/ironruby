@@ -14,20 +14,19 @@
  * ***************************************************************************/
 
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using IronRuby.Hosting;
-using IronRuby.Runtime;
 using System.Security;
+using IronRuby;
 
 [assembly: AssemblyTitle("Ruby Libraries")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
 [assembly: AssemblyProduct("Ruby")]
-[assembly: AssemblyCopyright("© Microsoft Corporation.  All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+
+[assembly: AssemblyCompany("IronRuby Team")]
+[assembly: AssemblyCopyright(CurrentVersion.AssemblyCopyright)]
 
 [assembly: ComVisible(false)]
 [assembly: Guid("ca75230d-3011-485d-b1db-dfe924b6c434")]

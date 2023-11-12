@@ -134,14 +134,10 @@ namespace IronRuby.Builtins {
             }
         }
 
-        protected override void Dispose(bool disposing) {
-            if (disposing) {
-                _buffer = null;
-                _bufferCount = _bufferStart = _pushedBackCount = 0;
-                _stream.Dispose();
-            }
-
-            base.Dispose(disposing);
+        public override void Close() {
+            _buffer = null;
+            _bufferCount = _bufferStart = _pushedBackCount = 0;
+            _stream.Close();
         }
 
         public override long Seek(long pos, SeekOrigin origin) {

@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
-using IronRuby.Runtime;
+using IronRuby;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -9,11 +9,12 @@ using IronRuby.Runtime;
 [assembly: AssemblyTitle("IronRuby.Libraries.Yaml")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
 [assembly: AssemblyProduct("IronRuby.Libraries.Yaml")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+
+[assembly: AssemblyCompany("IronRuby Team")]
+[assembly: AssemblyCopyright(CurrentVersion.AssemblyCopyright)]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 

@@ -13,7 +13,7 @@
  *
  * ***************************************************************************/
 #if FEATURE_CALL_SITE_TRACER
-#if FEATURE_CORE_DLR
+#if !CLR2
 using MSA = System.Linq.Expressions;
 #else
 using MSA = Microsoft.Scripting.Ast;

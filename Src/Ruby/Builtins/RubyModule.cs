@@ -1746,15 +1746,15 @@ namespace IronRuby.Builtins {
         }
 
         /// <summary>
-        /// inherited == false, attributes &amp; attr == Instance:
+        /// inherited == false, attributes & attr == Instance:
         ///   - get methods in the "self" module
         ///   - also include methods on singleton ancestor classes until a non-singleton class is reached
-        /// inherited == false, attributes &amp; attr == Singleton:
+        /// inherited == false, attributes & attr == Singleton:
         ///   - get methods only in the "self" module if it's a singleton class
         ///   - do not visit mixins nor super classes 
-        /// inherited == true, attributes &amp; attr == Singleton:
+        /// inherited == true, attributes & attr == Singleton:
         ///   - walk all ancestors until a non-singleton class is reached (do not include non-singleton's methods)
-        /// inherited == true, attributes &amp; attr == None:
+        /// inherited == true, attributes & attr == None:
         ///   - walk all ancestors until an Object is reached
         /// 
         /// Methods are filtered by visibility specified in attributes (mutliple visibilities could be specified).

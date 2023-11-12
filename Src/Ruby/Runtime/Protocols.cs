@@ -28,7 +28,6 @@ using Microsoft.Scripting.Runtime;
 using Microsoft.Scripting.Utils;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Numerics;
 
 namespace IronRuby.Runtime {
     /// <summary>
@@ -377,7 +376,7 @@ namespace IronRuby.Runtime {
                 return hashResult.GetHashCode();
             }
 
-            return hashResult == null ? RubyUtils.NilObjectId : ReferenceEqualityComparer<object>.Instance.GetHashCode(hashResult);
+            return hashResult == null ? RubyUtils.NilObjectId : RuntimeHelpers.GetHashCode(hashResult);
         }
 
         #endregion

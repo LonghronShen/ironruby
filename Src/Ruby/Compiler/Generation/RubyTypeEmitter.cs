@@ -12,9 +12,8 @@
  *
  *
  * ***************************************************************************/
-#if FEATURE_REFEMIT
 
-#if FEATURE_CORE_DLR
+#if !CLR2
 using System.Linq.Expressions;
 #else
 using Microsoft.Scripting.Ast;
@@ -135,7 +134,7 @@ namespace IronRuby.Compiler.Generation {
         protected override void EmitImplicitContext(ILGen il) {
             il.EmitLoadArg(0);
             EmitClassObjectFromInstance(il);
-            il.EmitPropertyGet(typeof(RubyModule).GetDeclaredProperty("Context"));
+            il.EmitPropertyGet(typeof(RubyModule).GetProperty("Context"));
         }
 
         protected override void EmitClassObjectFromInstance(ILGen il) {
@@ -163,4 +162,3 @@ namespace IronRuby.Compiler.Generation {
         }
     }
 }
-#endif

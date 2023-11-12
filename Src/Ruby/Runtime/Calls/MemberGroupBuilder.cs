@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using IronRuby.Builtins;
+using Microsoft.Scripting.Actions.Calls;
 using Microsoft.Scripting.Utils;
 
 namespace IronRuby.Runtime.Calls {
@@ -85,7 +86,7 @@ namespace IronRuby.Runtime.Calls {
             _allMethods = null;
             if (inheritedRubyMember != null) {
                 // case [2.2.2]: add CLR methods from the Ruby member:
-                var inheritedGroup = inheritedRubyMember as RubyMethodGroupInfo;
+                var inheritedGroup = inheritedRubyMember as RubyOverloadGroupInfo;
                 if (inheritedGroup != null) {
                     AddMethodsOverwriteExisting(inheritedGroup.MethodBases, inheritedGroup.OverloadOwners);
                 }
@@ -153,6 +154,34 @@ namespace IronRuby.Runtime.Calls {
             return anyChange;
         }
 
+        private bool AddMethodsOverwriteExisting(
+            OverloadInfo/*!*/[]/*!*/ newOverloads, RubyMethodGroupInfo/*!*/[] overloadOwners)
+        {
+
+            bool anyChange = false;
+            for (int i = 0; i < newOverloads.Length; i++)
+            {
+                var method = newOverloads[i].ReflectionInfo;
+                if (IsVisible(method))
+                {
+                    var paramTypes = new ValueArray<Type>(ReflectionUtils.GetParameterTypes(method.GetParameters()));
+                    if (_allMethods == null)
+                    {
+                        _allMethods = new Dictionary<ValueArray<Type>, ClrOverloadInfo>();
+                    }
+
+                    _allMethods[paramTypes] = new ClrOverloadInfo
+                    {
+                        Overload = method,
+                        Owner = (overloadOwners != null) ? overloadOwners[i] : null
+                    };
+
+                    anyChange = true;
+                }
+            }
+            return anyChange;
+        }
+
         private bool IsVisible(MethodBase/*!*/ method) {
             return !method.IsPrivate && (method.IsSpecialName || !_specialNameOnly);
         }
@@ -177,7 +206,7 @@ namespace IronRuby.Runtime.Calls {
                 i++;
             }
 
-            var result = new RubyMethodGroupInfo(overloads, cls, overloadOwners, cls.IsSingletonClass);
+            var result = new RubyOverloadGroupInfo(overloads, cls, overloadOwners, cls.IsSingletonClass);
 
             // update ownership of overloads owned by the new group:
             foreach (var entry in _allMethods.Values) {
@@ -200,7 +229,7 @@ namespace IronRuby.Runtime.Calls {
                 }
             }
 
-            return new RubyMethodGroupInfo(allMethods, cls, null, cls.IsSingletonClass);
+            return new RubyOverloadGroupInfo(allMethods, cls, null, cls.IsSingletonClass);
         }
     }
 }

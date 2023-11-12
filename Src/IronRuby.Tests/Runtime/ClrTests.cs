@@ -28,9 +28,13 @@ using Microsoft.Scripting.Math;
 using Microsoft.Scripting.Runtime;
 using Microsoft.Scripting.Utils;
 using Microsoft.Scripting.Actions;
+
 #if !CLR2
-using BigInt = System.Numerics.BigInteger;
 using System.Reflection.Emit;
+
+using BigInt = System.Numerics.BigInteger;
+using Complex = System.Numerics.Complex;
+using Range = IronRuby.Builtins.Range;
 #endif
 
 namespace IronRuby.Tests {
@@ -1779,7 +1783,7 @@ false
         /// </summary>
         public void ClrTypes1() {
             TestTypeAndTracker(typeof(ClassWithMethods1));
-            TestTypeAndTracker(TypeTracker.GetTypeTracker(typeof(ClassWithMethods1)));
+            TestTypeAndTracker(ReflectionCache.GetTypeTracker(typeof(ClassWithMethods1)));
         }
 
         public void TestTypeAndTracker(object type) {
@@ -3290,7 +3294,7 @@ false
                 return a ?? b ?? 3;
             }
 
-            public object[] Numerics(byte a, sbyte b, short c, ushort d, int e, uint f, long g, ulong h, BigInteger i, Complex64 j, Convertible1 k) {
+            public object[] Numerics(byte a, sbyte b, short c, ushort d, int e, uint f, long g, ulong h, BigInteger i, Complex j, Convertible1 k) {
                 return new object[] { a, b, c, d, e, f, g, h, i, j, k };
             }
 

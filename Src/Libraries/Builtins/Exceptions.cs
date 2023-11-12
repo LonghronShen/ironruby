@@ -16,11 +16,14 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Runtime.Remoting;
 using System.Security;
 using Microsoft.Scripting.Runtime;
 using Microsoft.Scripting.Utils;
 using IronRuby.Runtime;
+
+#if FEATURE_REMOTING
+using System.Runtime.Remoting;
+#endif
 
 namespace IronRuby.Builtins {
 
@@ -189,7 +192,7 @@ namespace IronRuby.Builtins {
             // Exception.Data requires the value to be Serializable. We workaround this using an array
             // of size 1 since System.Array is serializable. This will allow the exception to be marshalled.
             // If the value cannot actually be marshalled, it will fail only if the value is later accessed.
-#if SILVERLIGHT
+#if SILVERLIGHT || NETSTANDARD
             result.Data[typeof(NoMethodErrorOps)] = new object[1] { args };
 #else
             result.Data[typeof(NoMethodErrorOps)] = new ObjectHandle[1] { new ObjectHandle(args) };
@@ -199,7 +202,7 @@ namespace IronRuby.Builtins {
 
         [RubyMethod("args")]
         public static object GetArguments(MissingMethodException/*!*/ self) {
-#if SILVERLIGHT
+#if SILVERLIGHT || NETSTANDARD
             object[] args = self.Data[typeof(NoMethodErrorOps)] as object[];
             if (args == null) {
                 return null;

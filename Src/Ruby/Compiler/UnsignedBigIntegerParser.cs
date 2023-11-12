@@ -17,7 +17,6 @@ using System;
 using System.Diagnostics;
 using Microsoft.Scripting.Utils;
 using Microsoft.Scripting.Math; 
-using System.Numerics;
 
 namespace IronRuby.Compiler {
 

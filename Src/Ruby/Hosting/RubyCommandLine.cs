@@ -12,7 +12,6 @@
  *
  *
  * ***************************************************************************/
-#if FEATURE_FULL_CONSOLE
 
 using System;
 using IronRuby.Builtins;
@@ -46,8 +45,8 @@ namespace IronRuby.Hosting {
 
         public static string GetLogo() {
             return String.Format(CultureInfo.InvariantCulture,
-                "IronRuby {1} on {2}{0}Copyright (c) Microsoft Corporation. All rights reserved.{0}{0}",
-                Environment.NewLine, IronRuby.CurrentVersion.DisplayVersion, RubyContext.MakeRuntimeDesriptionString());
+                "IronRuby {1} on {2}{0}{3}{0}{0}",
+                Environment.NewLine, RubyContext.IronRubyInformationalVersion, RubyContext.MakeRuntimeDesriptionString(), CurrentVersion.AssemblyCopyright);
         }
 
         protected override int? TryInteractiveAction() {
@@ -118,4 +117,3 @@ namespace IronRuby.Hosting {
         }
     }
 }
-#endif

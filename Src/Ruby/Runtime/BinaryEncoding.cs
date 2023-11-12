@@ -28,7 +28,7 @@ namespace IronRuby.Runtime {
     public sealed class BinaryEncoding : Encoding {
         public static readonly Encoding/*!*/ Instance = new BinaryEncoding();
 
-#if FEATURE_ENCODING
+#if !SILVERLIGHT
         private BinaryEncoding()
             : base(RubyEncoding.CodePageBinary) {
 #else
@@ -86,7 +86,7 @@ namespace IronRuby.Runtime {
             return byteCount;
         }
 
-#if FEATURE_ENCODING
+#if !SILVERLIGHT
         public override string/*!*/ EncodingName {
             get { return "ASCII-8BIT"; }
         }

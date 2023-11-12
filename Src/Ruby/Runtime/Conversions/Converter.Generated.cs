@@ -15,7 +15,6 @@
 
 using System;
 using Microsoft.Scripting.Math;
-using Microsoft.Scripting.Utils;
 
 namespace IronRuby.Runtime.Conversions {
     internal enum NumericTypeCode {
@@ -47,7 +46,7 @@ namespace IronRuby.Runtime.Conversions {
         private static readonly NumericTypeCode[] TypeCodeMapping = CreateTypeCodeMapping();
 
         private static NumericTypeCode GetNumericTypeCode(Type/*!*/ type) {
-            TypeCode tc = type.GetTypeCode();
+            TypeCode tc = Type.GetTypeCode(type);
             if (tc == TypeCode.Object) {
                 if (type == typeof(BigInteger)) {
                     return NumericTypeCode.BigInteger;

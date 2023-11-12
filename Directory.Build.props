@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+
+		<PackageTags>ironruby;ruby;dynamic;dlr</PackageTags>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<Authors>IronRuby Community</Authors>
+		<Description>IronRuby is an open-source implementation of the Ruby programming language which is tightly integrated with the .NET Framework. IronRuby can use the .NET Framework and Ruby libraries, and other .NET languages can use Ruby code just as easily.</Description>
+		<PackageProjectUrl>https://github.com/LognhronShen/ironruby</PackageProjectUrl>
+		<PackageIcon>logo.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+		<WarningsNotAsErrors>618;429;219;1717;162;414</WarningsNotAsErrors>
+		<NoWarn>1591;1584;1574;1685;1573;0618;1658;1570;1587</NoWarn>
+		<ErrorReport>prompt</ErrorReport>
+		<WarningLevel>4</WarningLevel>
+	</PropertyGroup>
+
+	<ItemGroup Condition=" $(GeneratePackageOnBuild) == 'true' ">
+		<None Include="../../logo.png" Pack="true" PackagePath="\"/>
+		<None Include="../Public/README.md" Pack="true" PackagePath="\"/>
+		<None Include="../Public/*.txt" Pack="true" PackagePath="\"/>
+	</ItemGroup>
+	
+	<ItemGroup Condition=" $(TargetFramework) != '' ">
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+		<PackageReference Include="GitVersion.MsBuild" Version="5.6.10*" PrivateAssets="All" />
+	</ItemGroup>
+</Project>

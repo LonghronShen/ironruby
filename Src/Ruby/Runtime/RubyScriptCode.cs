@@ -13,7 +13,7 @@
  *
  * ***************************************************************************/
 
-#if FEATURE_CORE_DLR
+#if !CLR2
 using System.Linq.Expressions;
 #else
 using Microsoft.Scripting.Ast;
@@ -37,13 +37,11 @@ namespace IronRuby.Runtime {
     using ScriptCodeFunc = Func<RubyScope, object, object>;
 
     internal class RubyScriptCode : ScriptCode {
-#if FEATURE_REFEMIT
         private sealed class CustomGenerator : DebugInfoGenerator {
             public override void MarkSequencePoint(LambdaExpression method, int ilOffset, DebugInfoExpression node) {
                 RubyMethodDebugInfo.GetOrCreate(method.Name).AddMapping(ilOffset, node.StartLine);
             }
         }
-#endif
 
         private readonly Expression<ScriptCodeFunc> _code;
         private readonly TopScopeFactoryKind _kind;
@@ -113,6 +111,8 @@ namespace IronRuby.Runtime {
             return Target(localScope, localScope.SelfObject);
         }
 
+        private static bool _HasPdbPermissions = true;
+
         internal static Delegate/*!*/ CompileLambda(LambdaExpression/*!*/ lambda, LanguageContext/*!*/ context) {
             return CompileLambda(lambda, context.DomainManager.Configuration.DebugMode, context.Options.NoAdaptiveCompilation, context.Options.CompilationThreshold);
         }
@@ -120,30 +120,26 @@ namespace IronRuby.Runtime {
         internal static Delegate/*!*/ CompileLambda(LambdaExpression/*!*/ lambda, bool debugMode, bool noAdaptiveCompilation, 
             int compilationThreshold) {
 
-#if FEATURE_REFEMIT
             if (debugMode) {
                 return CompileDebug(lambda);
-            } 
-#endif
-            if (noAdaptiveCompilation) {
+            } else if (noAdaptiveCompilation) {
                 Delegate result = lambda.Compile();
-#if !WIN8
                 // DLR closures should not be used:
+#if !WIN8 && !NETSTANDARD
                 Debug.Assert(!(result.Target is Closure) || ((Closure)result.Target).Locals == null);
 #endif
                 return result;
-            } 
-
-            return lambda.LightCompile(compilationThreshold);
+            } else {
+                return lambda.LightCompile(compilationThreshold);
+            }
         }
 
-#if FEATURE_PDBEMIT
-        private static bool _HasPdbPermissions = true;
-#endif
-
-#if FEATURE_REFEMIT
+        // Avoid loading Ref.Emit types (Compact Framework):
+        [MethodImpl(MethodImplOptions.NoInlining)]
         private static Delegate/*!*/ CompileDebug(LambdaExpression/*!*/ lambda) {
-#if FEATURE_PDBEMIT
+#if NETSTANDARD
+            throw new NotImplementedException();
+#else
             // try to use PDBs and fallback to CustomGenerator if not allowed to:
             if (_HasPdbPermissions) {
                 try {
@@ -153,9 +149,8 @@ namespace IronRuby.Runtime {
                     _HasPdbPermissions = false;
                 }
             }
-#endif
             return CompilerHelpers.CompileToMethod(lambda, new CustomGenerator(), false);
-        }
 #endif
+        }
     }
 }

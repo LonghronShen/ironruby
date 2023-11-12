@@ -13,10 +13,10 @@
  *
  * ***************************************************************************/
 
-#if FEATURE_CORE_DLR
-using System.Linq.Expressions;
-#else
+#if CLR2
 using Microsoft.Scripting.Ast;
+#else
+using System.Linq.Expressions;
 #endif
 
 using System;

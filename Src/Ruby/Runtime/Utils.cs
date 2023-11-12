@@ -13,7 +13,7 @@
  *
  * ***************************************************************************/
 
-#if FEATURE_CORE_DLR
+#if !CLR2
 using System.Linq.Expressions;
 #else
 using Microsoft.Scripting.Ast;
@@ -862,7 +862,7 @@ namespace IronRuby.Runtime {
             return true;
         }
 
-        public static TOutput[]/*!*/ ConvertAll<TInput, TOutput>(this TInput[]/*!*/ array, Func<TInput, TOutput>/*!*/ converter) {
+        public static TOutput[]/*!*/ ConvertAll<TInput, TOutput>(this TInput[]/*!*/ array, Converter<TInput, TOutput>/*!*/ converter) {
             var result = new TOutput[array.Length];
             for (int i = 0; i < array.Length; i++) {
                 result[i] = converter(array[i]);
@@ -889,15 +889,13 @@ namespace IronRuby.Runtime {
 
         [Conditional("DEBUG")]
         public static void Log(string/*!*/ message, string/*!*/ category) {
-#if WIN8 || ANDROID || WP75
-            Debug.WriteLine(category + ": " + message);
-#elif !SILVERLIGHT
+#if !SILVERLIGHT
             Debug.WriteLine((object)message, category);
 #endif
         }
 
         public static long DateTimeTicksFromStopwatch(long elapsedStopwatchTicks) {
-#if !SILVERLIGHT && !WP75
+#if !SILVERLIGHT
             if (Stopwatch.IsHighResolution) {
                 return (long)(((double)elapsedStopwatchTicks) * 10000000.0 / (double)Stopwatch.Frequency);
             }
@@ -914,11 +912,11 @@ namespace IronRuby.Runtime {
         }
 
         public static char ToUpperInvariant(this char c) {
-            return Char.ToUpperInvariant(c);
+            return Char.ToUpper(c, CultureInfo.InvariantCulture);
         }
 
         public static char ToLowerInvariant(this char c) {
-            return Char.ToLowerInvariant(c);
+            return Char.ToLower(c, CultureInfo.InvariantCulture);
         }
 
 #if SILVERLIGHT
@@ -941,9 +939,17 @@ namespace IronRuby.Runtime {
                 return null;
             }
 
-            Action<RubyModule> result = _ => { };
-            foreach (var d in chain.GetInvocationList()) {
-                result += (Action<RubyModule>)d;
+            Delegate[] delegates = chain.GetInvocationList();
+            Action<RubyModule> result;
+#if SILVERLIGHT
+            int i = 0;
+            result = (_) => {};
+#else
+            int i = 1;
+            result = (Action<RubyModule>)delegates[0].Clone();
+#endif
+            for (; i < delegates.Length; i++) {
+                result += (Action<RubyModule>)delegates[i];
             }
 
             return result;
@@ -956,7 +962,7 @@ namespace IronRuby.Runtime {
             }
         }
 
-#if FEATURE_ENCODING
+#if !SILVERLIGHT
         private sealed class CheckDecoderFallback : DecoderFallback {
             public bool HasInvalidCharacters { get; private set; }
 
