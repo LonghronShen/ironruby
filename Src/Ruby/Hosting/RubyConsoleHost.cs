@@ -12,7 +12,7 @@
  *
  *
  * ***************************************************************************/
-
+#if FEATURE_BASIC_CONSOLE
 using System;
 using System.IO;
 using System.Threading;
@@ -71,3 +71,4 @@ namespace IronRuby.Hosting {
         }
     }
 }
+#endif

@@ -76,6 +76,7 @@ namespace IronRuby.Runtime {
         public static readonly string/*!*/ IronRubyVersionString = CurrentVersion.AssemblyVersion;
         public static readonly Version IronRubyVersion = CurrentVersion.Version;
 
+        internal const string IronRubyDisplayNameFallback = "IronRuby 1.1.3";
         internal static readonly string/*!*/ IronRubyDisplayName = CurrentVersion.DisplayName;
         internal const string/*!*/ IronRubyNames = "IronRuby;Ruby;rb";
         internal const string/*!*/ IronRubyFileExtensions = ".rb";

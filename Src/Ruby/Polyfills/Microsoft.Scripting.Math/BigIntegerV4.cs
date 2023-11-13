@@ -12,7 +12,7 @@
  *
  *
  * ***************************************************************************/
-#if !CLR2 && !FEATURE_LEGACY_DLR
+#if !CLR2 && !FEATURE_LEGACY_DLR && !SILVERLIGHT
 
 using System;
 using System.Collections.Generic;

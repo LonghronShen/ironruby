@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace IronRuby
 {
@@ -6,7 +7,13 @@ namespace IronRuby
     {
         public const string AssemblyCopyright = "Copyright (c) IronRuby Contributors. All rights reserved.";
 
-        public static readonly Version Version = typeof(CurrentVersion).Assembly.GetName().Version;
+        public static readonly Version Version = typeof(CurrentVersion).Assembly
+#if SILVERLIGHT
+            .GetAssemblyName()
+#else
+            .GetName()
+#endif
+            .Version;
 
         public static int Major
         {

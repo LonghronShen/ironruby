@@ -12,7 +12,7 @@
  *
  *
  * ***************************************************************************/
-#if !FEATURE_LEGACY_DLR
+#if !FEATURE_LEGACY_DLR && !SILVERLIGHT
 
 #if !CLR2
 using BigInt = System.Numerics.BigInteger;

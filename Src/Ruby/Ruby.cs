@@ -35,7 +35,7 @@ using System.Runtime.Remoting;
 #endif
 
 #if SILVERLIGHT
-[assembly: DynamicLanguageProvider(typeof(RubyContext), RubyContext.IronRubyDisplayName, RubyContext.IronRubyNames, RubyContext.IronRubyFileExtensions)]
+[assembly: DynamicLanguageProvider(typeof(RubyContext), RubyContext.IronRubyDisplayNameFallback, RubyContext.IronRubyNames, RubyContext.IronRubyFileExtensions)]
 #endif
 
 namespace IronRuby {

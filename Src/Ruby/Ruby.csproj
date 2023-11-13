@@ -1,13 +1,16 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="MSBuild.Sdk.Extras">
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net35;net40</TargetFrameworks>
-		<!--<TargetFrameworks>netstandard2.0;net35;net40;sl5</TargetFrameworks>-->
+		<TargetFrameworks>netstandard2.0;net35;net40;sl5</TargetFrameworks>
 
 		<RootNamespace>IronRuby</RootNamespace>
 		<AssemblyName>IronRuby</AssemblyName>
 
 		<PackageId>IronRuby.Portable</PackageId>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<NoWarn>NU5128</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>

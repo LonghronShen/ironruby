@@ -84,12 +84,20 @@ namespace IronRuby.Runtime {
 
         [MethodImpl(MethodImplOptions.NoInlining)] // CF
         private static string GetFileName(StackFrame/*!*/ frame) {
+#if SILVERLIGHT
+            return null;
+#else
             return frame.GetFileName();
+#endif
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)] // CF
         private static string/*!*/ GetAssemblyName(Assembly/*!*/ assembly) {
+#if SILVERLIGHT
+            return assembly.GetAssemblyName().Name;
+#else
             return assembly.GetName().Name;
+#endif
         }
 
         private void InitializeInterpretedFrames() {

@@ -3,32 +3,38 @@ namespace IronRuby
 
     internal static class BuildInfo
     {
-        internal const string Configuration = "{0}";
+        internal const string Configuration =
+#if DEBUG
+            "Debug"
+#else
+            "Release"
+#endif
+            ;
 
         internal const bool IsDebug =
 #if DEBUG
             true;
 #else
-        false;
+            false;
 #endif
 
         internal const bool IsCLR2 =
 #if CLR2
-        true;
+            true;
 #else
             false;
 #endif
 
         internal const bool IsCLR4 =
 #if CLR4
-        true;
+            true;
 #else
             false;
 #endif
 
         internal const bool IsSilverlight =
 #if SILVERLIGHT
-        true;
+            true;
 #else
             false;
 #endif
