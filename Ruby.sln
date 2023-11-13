@@ -35,6 +35,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{BBF4E796
 		Build\net35.props = Build\net35.props
 		Build\net40.props = Build\net40.props
 		Build\netstandard2.0.props = Build\netstandard2.0.props
+		Build\profile136.props = Build\profile136.props
+		Build\profile336.props = Build\profile336.props
 		Build\sl5.props = Build\sl5.props
 	EndProjectSection
 EndProject

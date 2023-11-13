@@ -313,7 +313,9 @@ namespace IronRuby.Builtins {
             RubyContext/*!*/ context, 
             MutableString/*!*/ command, 
             IOMode mode) {
-
+#if SILVERLIGHT
+            throw new NotSupportedException();
+#else
             bool redirectStandardInput = mode.CanWrite();
             bool redirectStandardOutput = mode.CanRead();
 
@@ -330,14 +332,15 @@ namespace IronRuby.Builtins {
             }
 
             return new RubyIO(context, reader, writer, mode);
+#endif
         }
 
 #endif
-        #endregion
+#endregion
 
-        #region select
+            #region select
 
-        [RubyMethod("select", RubyMethodAttributes.PublicSingleton)]
+            [RubyMethod("select", RubyMethodAttributes.PublicSingleton)]
         public static RubyArray Select(RubyContext/*!*/ context, object self, RubyArray read, [Optional]RubyArray write, [Optional]RubyArray error) {
             return SelectInternal(context, read, write, error, new TimeSpan(0, 0, 0, 0, Timeout.Infinite));
         }

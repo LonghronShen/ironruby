@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="MSBuild.Sdk.Extras">
 	<PropertyGroup>
-		<TargetFrameworks>net35;net40;netstandard2.0</TargetFrameworks>
-		<RootNamespace>ClassInitGenerator</RootNamespace>
+		<TargetFrameworks>netstandard2.0;net35;net40;sl5</TargetFrameworks>
+		<RootNamespace>IronRuby.Libraries.Yaml</RootNamespace>
 
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	</PropertyGroup>
@@ -11,6 +11,7 @@
 		<ProjectReference Include="..\Ruby\Ruby.csproj" />
 	</ItemGroup>
 
+	<Import Project="../../Build/sl5.props" Condition=" '$(TargetFramework)' == 'sl5' " />
 	<Import Project="../../Build/net35.props" Condition=" '$(TargetFramework)' == 'net35' " />
 	<Import Project="../../Build/net40.props" Condition=" '$(TargetFramework)' == 'net40' " />
 	<Import Project="../../Build/netstandard2.0.props" Condition=" '$(TargetFramework)' == 'netstandard2.0' " />

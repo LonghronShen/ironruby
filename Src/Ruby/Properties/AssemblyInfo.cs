@@ -51,6 +51,7 @@ using IronRuby.Runtime;
 
 [assembly: InternalsVisibleTo("IronRuby.Tests")]
 [assembly: InternalsVisibleTo("IronRuby.Libraries")]
+[assembly: InternalsVisibleTo("IronRuby.Libraries.Yaml")]
 
 [assembly: SecurityTransparent]
 #if !CLR2 && !SILVERLIGHT && !WIN8 && !ANDROID && !WP75

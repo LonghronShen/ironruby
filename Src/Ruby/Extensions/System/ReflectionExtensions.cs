@@ -9,7 +9,7 @@ namespace System
     internal static class ReflectionExtensions
     {
 
-#if NET35 || NET40
+#if NET35 || NET40 || SILVERLIGHT
         public static MethodInfo GetMethodInfo(this Delegate del)
         {
             if (del == null)

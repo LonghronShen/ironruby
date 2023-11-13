@@ -29,6 +29,7 @@
 		<PackageReference Include="System.Runtime.Numerics" Version="4.3.0" />
 	</ItemGroup>
 
+	<!--<Import Project="../../Build/profile336.props" />-->
 	<Import Project="../../Build/sl5.props" Condition=" '$(TargetFramework)' == 'sl5' " />
 	<Import Project="../../Build/net35.props" Condition=" '$(TargetFramework)' == 'net35' " />
 	<Import Project="../../Build/net40.props" Condition=" '$(TargetFramework)' == 'net40' " />

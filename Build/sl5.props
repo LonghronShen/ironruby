@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
 	<PropertyGroup>
-		<NoStdLib>true</NoStdLib>
 		<!--<TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
 		<TargetFrameworkVersion>v5.0</TargetFrameworkVersion>-->
 		<PlatformSymbols>SILVERLIGHT;SILVERLIGHT5;CLR4</PlatformSymbols>
 		<IsSilverlight>true</IsSilverlight>
 		<IsFullFramework>false</IsFullFramework>
 		<FeatureCoreDlr>true</FeatureCoreDlr>
+		<IncludeRubyStdLib>false</IncludeRubyStdLib>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -26,9 +26,9 @@
 		<!--<Features>$(Features);FEATURE_CUSTOM_TYPE_DESCRIPTOR</Features>-->
 		<!--<Features>$(Features);FEATURE_ENCODING</Features>-->
 		<Features>$(Features);FEATURE_DBNULL</Features>
-		<!--<Features>$(Features);FEATURE_FILESYSTEM</Features>-->
+		<Features>$(Features);FEATURE_FILESYSTEM</Features>
 		<Features>$(Features);FEATURE_THREAD</Features>
-		<!--<Features>$(Features);FEATURE_PROCESS</Features>-->
+		<Features>$(Features);FEATURE_PROCESS</Features>
 		<Features>$(Features);FEATURE_STACK_TRACE</Features>
 		<!--<Features>$(Features);FEATURE_TYPE_EQUIVALENCE</Features>-->
 		<Features>$(Features);FEATURE_NUMERICS</Features>

@@ -14,7 +14,11 @@
  * ***************************************************************************/
 #if FEATURE_PROCESS
 
+#if !SILVERLIGHT
 using System.Diagnostics;
+#endif
+
+using System;
 using IronRuby.Builtins;
 using IronRuby.Runtime;
 using Microsoft.Scripting.Runtime;
@@ -28,7 +32,9 @@ namespace IronRuby.StandardLibrary.Open3 {
             RubyContext/*!*/ context, 
             object self, 
             [DefaultProtocol, NotNull]MutableString/*!*/ command) {
-
+#if SILVERLIGHT
+            throw new NotSupportedException();
+#else
             Process process = RubyProcess.CreateProcess(context, command, true, true, true);
             RubyArray result = new RubyArray();
             result.Add(new RubyIO(context, null, process.StandardInput, IOMode.WriteOnly));
@@ -40,6 +46,7 @@ namespace IronRuby.StandardLibrary.Open3 {
             }
 
             return result;
+#endif
         }
     }
 }

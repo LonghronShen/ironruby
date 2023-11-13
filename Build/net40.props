@@ -6,6 +6,7 @@
 		<IsSilverlight>false</IsSilverlight>
 		<IsFullFramework>true</IsFullFramework>
 		<FeatureCoreDlr>true</FeatureCoreDlr>
+		<IncludeRubyStdLib>true</IncludeRubyStdLib>
 	</PropertyGroup>
 
 	<PropertyGroup>

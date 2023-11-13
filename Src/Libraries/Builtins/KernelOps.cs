@@ -1095,6 +1095,9 @@ namespace IronRuby.Builtins {
         [RubyMethod("`", RubyMethodAttributes.PrivateInstance, BuildConfig = "FEATURE_PROCESS")]
         [RubyMethod("`", RubyMethodAttributes.PublicSingleton, BuildConfig = "FEATURE_PROCESS")]
         public static MutableString/*!*/ ExecuteCommand(RubyContext/*!*/ context, object self, [DefaultProtocol, NotNull]MutableString/*!*/ command) {
+#if SILVERLIGHT
+            throw new NotSupportedException();
+#else
             Process p = RubyProcess.CreateProcess(context, command, true);
 
             string output = p.StandardOutput.ReadToEnd();
@@ -1103,6 +1106,7 @@ namespace IronRuby.Builtins {
             }
             MutableString result = MutableString.Create(output, RubyEncoding.GetRubyEncoding(p.StandardOutput.CurrentEncoding));
             return result;
+#endif
         }
 
         // Overloads of exec and system will always execute using the Windows shell if there is only the command parameter
@@ -1111,22 +1115,33 @@ namespace IronRuby.Builtins {
         [RubyMethod("exec", RubyMethodAttributes.PrivateInstance, BuildConfig = "FEATURE_PROCESS")]
         [RubyMethod("exec", RubyMethodAttributes.PublicSingleton, BuildConfig = "FEATURE_PROCESS")]
         public static void Execute(RubyContext/*!*/ context, object self, [DefaultProtocol, NotNull]MutableString/*!*/ command) {
+#if SILVERLIGHT
+            throw new NotSupportedException();
+#else
             Process p = RubyProcess.CreateProcess(context, command, false);
             p.WaitForExit();
             Exit(self, p.ExitCode);
+#endif
         }
 
         [RubyMethod("exec", RubyMethodAttributes.PrivateInstance, BuildConfig = "FEATURE_PROCESS")]
         [RubyMethod("exec", RubyMethodAttributes.PublicSingleton, BuildConfig = "FEATURE_PROCESS")]
         public static void Execute(RubyContext/*!*/ context, object self, [DefaultProtocol, NotNull]MutableString/*!*/ command,
             [DefaultProtocol, NotNullItems]params MutableString/*!*/[]/*!*/ args) {
+#if SILVERLIGHT
+            throw new NotSupportedException();
+#else
             Process p = RubyProcess.CreateProcess(context, command, args);
             Exit(self, p.ExitCode);
+#endif
         }
 
         [RubyMethod("system", RubyMethodAttributes.PrivateInstance, BuildConfig = "FEATURE_PROCESS")]
         [RubyMethod("system", RubyMethodAttributes.PublicSingleton, BuildConfig = "FEATURE_PROCESS")]
         public static bool System(RubyContext/*!*/ context, object self, [DefaultProtocol, NotNull]MutableString/*!*/ command) {
+#if SILVERLIGHT
+            throw new NotSupportedException();
+#else
             try {
                 Process p = RubyProcess.CreateProcess(context, command, false);
                 p.WaitForExit();
@@ -1134,23 +1149,28 @@ namespace IronRuby.Builtins {
             } catch (FileNotFoundException) {
                 return false;
             }
+#endif
         }
 
         [RubyMethod("system", RubyMethodAttributes.PrivateInstance, BuildConfig = "FEATURE_PROCESS")]
         [RubyMethod("system", RubyMethodAttributes.PublicSingleton, BuildConfig = "FEATURE_PROCESS")]
         public static bool System(RubyContext/*!*/ context, object self, [DefaultProtocol, NotNull]MutableString/*!*/ command,
             [DefaultProtocol, NotNullItems]params MutableString/*!*/[]/*!*/ args) {
+#if SILVERLIGHT
+            throw new NotSupportedException();
+#else
             try {
                 Process p = RubyProcess.CreateProcess(context, command, args);
                 return p.ExitCode == 0;
             } catch (FileNotFoundException) {
                 return false;
             }
+#endif
         }
 
         //fork
 #endif
-        #endregion
+#endregion
 
         #region select, sleep
 
@@ -1303,21 +1323,29 @@ namespace IronRuby.Builtins {
         [RubyMethod("trap", RubyMethodAttributes.PrivateInstance, BuildConfig = "FEATURE_PROCESS")]
         [RubyMethod("trap", RubyMethodAttributes.PublicSingleton, BuildConfig = "FEATURE_PROCESS")]
         public static object Trap(RubyContext/*!*/ context, object self, object signalId, Proc proc) {
+#if SILVERLIGHT
+            throw new NotSupportedException();
+#else
             return Signal.Trap(context, self, signalId, proc);
+#endif
         }
 
         [RubyMethod("trap", RubyMethodAttributes.PrivateInstance, BuildConfig = "FEATURE_PROCESS")]
         [RubyMethod("trap", RubyMethodAttributes.PublicSingleton, BuildConfig = "FEATURE_PROCESS")]
         public static object Trap(RubyContext/*!*/ context, [NotNull]BlockParam/*!*/ block, object self, object signalId) {
+#if SILVERLIGHT
+            throw new NotSupportedException();
+#else
             return Signal.Trap(context, block, self, signalId);
+#endif
         }
 
 #endif
-        #endregion
+#endregion
 
-        #region abort, exit, exit!, at_exit
+            #region abort, exit, exit!, at_exit
 
-        [RubyMethod("abort", RubyMethodAttributes.PrivateInstance)]
+            [RubyMethod("abort", RubyMethodAttributes.PrivateInstance)]
         [RubyMethod("abort", RubyMethodAttributes.PublicSingleton)]
         public static void Abort(object/*!*/ self) {
             Exit(self, 1);

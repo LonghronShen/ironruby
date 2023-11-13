@@ -718,8 +718,10 @@ namespace IronRuby.Builtins {
             if (!info.Exists) {
                 throw RubyExceptions.CreateENOENT("No such file or directory - {0}", strPath);
             }
+#if !SILVERLIGHT
             info.LastAccessTimeUtc = accessTime.ToUniversalTime();
             info.LastWriteTimeUtc = modifiedTime.ToUniversalTime();
+#endif
             return 1;
         }
 

@@ -6,13 +6,9 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	</PropertyGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'sl5' ">
-		<PackageReference Include="DynamicLanguageRuntime" Version="1.1.0-alpha1" />
-	</ItemGroup>
-
 	<ItemGroup>
 		<ProjectReference Include="..\Ruby\Ruby.csproj" />
-		<ProjectReference Include="..\StdLib\StdLib.csproj" Condition=" $(NoStdLib) != 'true' " />
+		<ProjectReference Include="..\StdLib\StdLib.csproj" Condition=" '$(IncludeRubyStdLib)' == 'true' " />
 	</ItemGroup>
 
 	<Import Project="../../Build/sl5.props" Condition=" '$(TargetFramework)' == 'sl5' " />

@@ -12,7 +12,7 @@
  *
  *
  * ***************************************************************************/
-#if FEATURE_PROCESS 
+#if !SILVERLIGHT && FEATURE_PROCESS
 
 using System;
 using System.Diagnostics;
