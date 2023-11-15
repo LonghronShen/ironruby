@@ -146,11 +146,11 @@ dotnet_diagnostic.CA1305.severity = none
 
 dotnet_diagnostic.CA1306.severity = error
 
-dotnet_diagnostic.CA1307.severity = error
+dotnet_diagnostic.CA1307.severity = suggestion
 
 dotnet_diagnostic.CA1308.severity = none
 
-dotnet_diagnostic.CA1309.severity = error
+dotnet_diagnostic.CA1309.severity = suggestion
 
 dotnet_diagnostic.CA1400.severity = none
 
@@ -294,7 +294,7 @@ dotnet_diagnostic.CA2000.severity = none
 
 dotnet_diagnostic.CA2001.severity = error
 
-dotnet_diagnostic.CA2002.severity = error
+dotnet_diagnostic.CA2002.severity = suggestion
 
 dotnet_diagnostic.CA2003.severity = error
 

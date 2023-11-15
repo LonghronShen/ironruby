@@ -60,10 +60,10 @@ namespace IronRuby.Hosting {
         }
 
         private void SetTraceFilter(string/*!*/ arg, bool enable) {
-            string[] categories = arg.Split(new[] { ';', ','}, StringSplitOptions.RemoveEmptyEntries);
+            string[] categories = arg.Split(new[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (categories.Length == 0 && !enable) {
-#if NETSTANDARD
+#if NETSTANDARD || NET
                 Trace
 #else
                 Debug
@@ -84,22 +84,22 @@ namespace IronRuby.Hosting {
                         }
                     };
 
-#if NETSTANDARD
+#if NETSTANDARD || NET
                 Trace
 #else
                 Debug
 #endif
                     .Listeners
                     .Add(_debugListener);
-            } 
-         
+            }
+
             foreach (var category in categories) {
                 ((CustomTraceFilter)_debugListener.Filter).Categories[category] = enable;
             }
         }
 #endif
 
-                private static string[] GetPaths(string input) {
+        private static string[] GetPaths(string input) {
             string[] paths = StringUtils.Split(input, new char[] { Path.PathSeparator }, Int32.MaxValue, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < paths.Length; i++) {
                 // Trim any occurrances of "

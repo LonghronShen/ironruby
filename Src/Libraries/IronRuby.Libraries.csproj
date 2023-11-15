@@ -1,6 +1,6 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net35;net40;sl5</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;net35;net40</TargetFrameworks>
 		<RootNamespace>IronRuby.Libraries</RootNamespace>
 
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>

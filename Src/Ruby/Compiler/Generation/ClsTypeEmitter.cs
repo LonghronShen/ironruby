@@ -299,7 +299,7 @@ namespace IronRuby.Compiler.Generation {
                     );
 
                     _dynamicSiteFactories.Add(Expression.Empty());
-#if !NETSTANDARD
+#if !NETSTANDARD && !NET
                     Expression.Lambda(Expression.Block(_dynamicSiteFactories)).CompileToMethod(createSitesImpl);
 #endif
                     _cctor.EmitCall(createSitesImpl);

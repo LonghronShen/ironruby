@@ -28,7 +28,7 @@ jobs:
 
       - name: Build
         run: |
-          msbuild /p:Configuration=Release /p:Platform="Any CPU" /m
+          msbuild /p:Configuration=Release /p:Platform="Any CPU"
 
       - name: Upload
         uses: actions/upload-artifact@v3

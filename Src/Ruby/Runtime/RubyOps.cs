@@ -42,6 +42,8 @@ using Microsoft.Scripting.Utils;
 using IronRuby.Compiler.Ast;
 using IronRuby.Runtime.Conversions;
 
+using Range = IronRuby.Builtins.Range;
+
 namespace IronRuby.Runtime {
     [ReflectionCached, CLSCompliant(false)]
     public static partial class RubyOps {
@@ -284,7 +286,7 @@ namespace IronRuby.Runtime {
 
         [Emitted]
         public static Proc/*!*/ DefineBlock(RubyScope/*!*/ scope, object self, BlockDispatcher/*!*/ dispatcher, object/*!*/ clrMethod) {
-#if !WIN8 && !NETSTANDARD
+#if !WIN8 && !NETSTANDARD && !NET
             // DLR closures should not be used:
             Debug.Assert(!(((Delegate)clrMethod).Target is Closure) || ((Closure)((Delegate)clrMethod).Target).Locals == null);
 #endif
@@ -293,7 +295,7 @@ namespace IronRuby.Runtime {
 
         [Emitted]
         public static Proc/*!*/ DefineLambda(RubyScope/*!*/ scope, object self, BlockDispatcher/*!*/ dispatcher, object/*!*/ clrMethod) {
-#if !WIN8 && !NETSTANDARD
+#if !WIN8 && !NETSTANDARD && !NET
             // DLR closures should not be used:
             Debug.Assert(!(((Delegate)clrMethod).Target is Closure) || ((Closure)((Delegate)clrMethod).Target).Locals == null);
 #endif

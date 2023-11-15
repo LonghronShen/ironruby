@@ -111,7 +111,9 @@ namespace IronRuby.Runtime {
             return Target(localScope, localScope.SelfObject);
         }
 
+#pragma warning disable CA1823 // Avoid unused private fields
         private static bool _HasPdbPermissions = true;
+#pragma warning restore CA1823 // Avoid unused private fields
 
         internal static Delegate/*!*/ CompileLambda(LambdaExpression/*!*/ lambda, LanguageContext/*!*/ context) {
             return CompileLambda(lambda, context.DomainManager.Configuration.DebugMode, context.Options.NoAdaptiveCompilation, context.Options.CompilationThreshold);
@@ -125,7 +127,7 @@ namespace IronRuby.Runtime {
             } else if (noAdaptiveCompilation) {
                 Delegate result = lambda.Compile();
                 // DLR closures should not be used:
-#if !WIN8 && !NETSTANDARD
+#if !WIN8 && !NETSTANDARD && !NET
                 Debug.Assert(!(result.Target is Closure) || ((Closure)result.Target).Locals == null);
 #endif
                 return result;
@@ -137,7 +139,7 @@ namespace IronRuby.Runtime {
         // Avoid loading Ref.Emit types (Compact Framework):
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static Delegate/*!*/ CompileDebug(LambdaExpression/*!*/ lambda) {
-#if NETSTANDARD
+#if NETSTANDARD || NET
             throw new NotImplementedException();
 #else
             // try to use PDBs and fallback to CustomGenerator if not allowed to:

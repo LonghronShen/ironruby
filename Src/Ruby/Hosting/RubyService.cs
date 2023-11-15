@@ -73,7 +73,7 @@ namespace IronRuby.Hosting {
             return _context.Loader.LoadFile(scope, null, _context.EncodePath(path), LoadFlags.Require);
         }
 
-#if !SILVERLIGHT && !NETSTANDARD
+#if !SILVERLIGHT && !NETSTANDARD && !NET
         public override object InitializeLifetimeService() {
             // track the engines lifetime
             return _engine.InitializeLifetimeService();

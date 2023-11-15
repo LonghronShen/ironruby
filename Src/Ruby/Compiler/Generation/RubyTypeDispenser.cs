@@ -26,6 +26,8 @@ using IronRuby.Builtins;
 using IronRuby.Runtime;
 using System.Globalization;
 
+using Range = IronRuby.Builtins.Range;
+
 namespace IronRuby.Compiler.Generation {
     internal static class RubyTypeDispenser {
 
@@ -107,6 +109,7 @@ namespace IronRuby.Compiler.Generation {
                 );
             }
 
+#if FEATURE_REFEMIT
             string typeName = GetName(baseType);
             TypeBuilder tb = Snippets.Shared.DefinePublicType(typeName, baseType);
             Utils.Log(typeName, "TYPE_BUILDER");
@@ -131,6 +134,9 @@ namespace IronRuby.Compiler.Generation {
                 _typeFeatures.Add(result, typeInfo.Features);
             }
             return result;
+#else
+            throw new NotSupportedException("Creating new CLR types is not supported on this platform.");
+#endif
         }
 
         private static string GetName(Type/*!*/ baseType) {
