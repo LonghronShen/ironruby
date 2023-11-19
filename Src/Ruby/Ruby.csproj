@@ -13,12 +13,6 @@
 		<NoWarn>NU5128</NoWarn>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<Compile Remove="Polyfills\Microsoft.Scripting.ComInterop\**" />
-		<EmbeddedResource Remove="Polyfills\Microsoft.Scripting.ComInterop\**" />
-		<None Remove="Polyfills\Microsoft.Scripting.ComInterop\**" />
-	</ItemGroup>
-
 	<ItemGroup Condition=" '$(TargetFramework)' == 'sl5' or '$(TargetFramework)' == 'net35' or '$(TargetFramework)' == 'net40' ">
 		<PackageReference Include="DynamicLanguageRuntime.Legacy" Version="1.1.0.30" />
 	</ItemGroup>

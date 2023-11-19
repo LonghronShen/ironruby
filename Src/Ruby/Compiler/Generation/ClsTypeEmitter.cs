@@ -293,14 +293,26 @@ namespace IronRuby.Compiler.Generation {
             }
 
             if (_cctor != null) {
-                if (_dynamicSiteFactories.Count > 0) { 
+                if (_dynamicSiteFactories.Count > 0) {
+                    const string methodName = "<create_dynamic_sites>";
+                    var returnType = typeof(void);
+                    var parameters = Type.EmptyTypes;
+
                     MethodBuilder createSitesImpl = _tb.DefineMethod(
-                        "<create_dynamic_sites>", MethodAttributes.Private | MethodAttributes.Static, typeof(void), Type.EmptyTypes
+                        methodName,
+                        MethodAttributes.Private | MethodAttributes.Static,
+                        returnType, parameters
                     );
 
                     _dynamicSiteFactories.Add(Expression.Empty());
+                    var block = Expression.Block(_dynamicSiteFactories);
+
 #if !NETSTANDARD && !NET
-                    Expression.Lambda(Expression.Block(_dynamicSiteFactories)).CompileToMethod(createSitesImpl);
+                    Expression.Lambda(block).CompileToMethod(createSitesImpl);
+#else
+                    var lb = Microsoft.Scripting.Ast.Utils.Lambda(returnType, methodName);
+                    lb.Body = block;
+                    var lambda = lb.MakeLambda();
 #endif
                     _cctor.EmitCall(createSitesImpl);
 
@@ -317,7 +329,7 @@ namespace IronRuby.Compiler.Generation {
 #endif
         }
 
-        internal protected ILGen CreateILGen(ILGenerator il) {
+        protected internal ILGen CreateILGen(ILGenerator il) {
             // TODO: Debugging support
             return new ILGen(il);
         }
