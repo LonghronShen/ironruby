@@ -938,7 +938,7 @@ namespace System.Linq.Expressions.Compiler {
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private void EmitLift(ExpressionType nodeType, Type resultType, MethodCallExpression mc, ParameterExpression[] paramList, Expression[] argList) {
-            Debug.Assert(TypeUtilsEx.AreEquivalent(TypeUtils.GetNonNullableType(resultType), TypeUtilsEx.GetNonNullableType(mc.Type)));
+            Debug.Assert(TypeUtilsEx.AreEquivalent(TypeUtilsEx.GetNonNullableType(resultType), TypeUtilsEx.GetNonNullableType(mc.Type)));
 
             switch (nodeType) {
                 default:
@@ -983,7 +983,7 @@ namespace System.Linq.Expressions.Compiler {
                         }
                         _ilg.Emit(OpCodes.Br_S, exit);
                         _ilg.MarkLabel(exitNull);
-                        if (TypeUtilsEx.AreEquivalent(resultType, TypeUtils.GetNullableType(mc.Type))) {
+                        if (TypeUtilsEx.AreEquivalent(resultType, TypeUtilsEx.GetNullableType(mc.Type))) {
                             if (resultType.IsValueType) {
                                 LocalBuilder result = GetLocal(resultType);
                                 _ilg.Emit(OpCodes.Ldloca, result);
@@ -1010,7 +1010,7 @@ namespace System.Linq.Expressions.Compiler {
                     }
                 case ExpressionType.Equal:
                 case ExpressionType.NotEqual: {
-                        if (TypeUtilsEx.AreEquivalent(resultType, TypeUtils.GetNullableType(mc.Type))) {
+                        if (TypeUtilsEx.AreEquivalent(resultType, TypeUtilsEx.GetNullableType(mc.Type))) {
                             goto default;
                         }
                         Label exit = _ilg.DefineLabel();

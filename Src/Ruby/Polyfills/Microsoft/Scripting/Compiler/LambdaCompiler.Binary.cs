@@ -13,6 +13,8 @@
  *
  * ***************************************************************************/
 #if FEATURE_COMPILE_TO_METHOD_POLYFILL
+using Microsoft.Contracts;
+using Microsoft.Scripting.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -99,12 +101,12 @@ namespace System.Linq.Expressions.Compiler {
 
         private void EmitBinaryMethod(BinaryExpression b, CompilationFlags flags) {
             if (b.IsLifted) {
-                ParameterExpression p1 = Expression.Variable(TypeUtils.GetNonNullableType(b.Left.Type), null);
-                ParameterExpression p2 = Expression.Variable(TypeUtils.GetNonNullableType(b.Right.Type), null);
+                ParameterExpression p1 = Expression.Variable(TypeUtilsEx.GetNonNullableType(b.Left.Type), null);
+                ParameterExpression p2 = Expression.Variable(TypeUtilsEx.GetNonNullableType(b.Right.Type), null);
                 MethodCallExpression mc = Expression.Call(null, b.Method, p1, p2);
                 Type resultType = null;
                 if (b.IsLiftedToNull) {
-                    resultType = TypeUtils.GetNullableType(mc.Type);
+                    resultType = TypeUtilsEx.GetNullableType(mc.Type);
                 } else {
                     switch (b.NodeType) {
                         case ExpressionType.Equal:
@@ -119,7 +121,7 @@ namespace System.Linq.Expressions.Compiler {
                             resultType = typeof(bool);
                             break;
                         default:
-                            resultType = TypeUtils.GetNullableType(mc.Type);
+                            resultType = TypeUtilsEx.GetNullableType(mc.Type);
                             break;
                     }
                 }
@@ -474,7 +476,7 @@ namespace System.Linq.Expressions.Compiler {
             }
 
             if (!TypeUtilsEx.AreEquivalent(resultType, TypeUtilsEx.GetNonNullableType(resultType))) {
-                _ilg.EmitConvertToType(TypeUtils.GetNonNullableType(resultType), resultType, true);
+                _ilg.EmitConvertToType(TypeUtilsEx.GetNonNullableType(resultType), resultType, true);
             }
 
             if (liftedToNull) {

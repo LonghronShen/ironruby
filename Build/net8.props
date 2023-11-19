@@ -74,7 +74,7 @@
 		<Features>$(Features);FEATURE_READONLY_DICTIONARY</Features>
 		<Features>$(Features);FEATURE_SORTKEY</Features>
 		<Features>$(Features);FEATURE_READONLY_COLLECTION_INTERFACE</Features>
-		<!--<Features>$(Features);FEATURE_COMPILE_TO_METHOD_POLYFILL</Features>-->
+		<Features>$(Features);FEATURE_COMPILE_TO_METHOD_POLYFILL</Features>
 	</PropertyGroup>
 
 	<PropertyGroup>

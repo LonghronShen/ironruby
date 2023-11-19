@@ -699,7 +699,7 @@ namespace System.Linq.Expressions.Compiler {
         private Result RewriteBlockExpression(Expression expr, Stack stack) {
             BlockExpression node = (BlockExpression)expr;
 
-            int count = node.ExpressionCount;
+            int count = node.ExpressionCount();
             RewriteAction action = RewriteAction.None;
             Expression[] clone = null;
             for (int i = 0; i < count; i++) {

@@ -13,7 +13,7 @@
  *
  * ***************************************************************************/
 
-#if !SILVERLIGHT && FEATURE_COM
+#if !SILVERLIGHT && !NET20_OR_GREATER && FEATURE_COM
 #if !CLR2
 using System.Linq.Expressions;
 #else

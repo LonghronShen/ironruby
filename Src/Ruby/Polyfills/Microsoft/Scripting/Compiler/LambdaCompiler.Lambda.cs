@@ -130,7 +130,7 @@ namespace System.Linq.Expressions.Compiler {
         }
 
         private static Type[] GetParameterTypes(LambdaExpression lambda) {
-            return lambda.Parameters.Map(p => p.IsByRef ? p.Type.MakeByRefType() : p.Type);
+            return lambda.Parameters.Select(p => p.IsByRef ? p.Type.MakeByRefType() : p.Type).ToArray();
         }
 
         private static string GetUniqueMethodName() {

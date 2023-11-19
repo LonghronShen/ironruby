@@ -13,6 +13,7 @@
  *
  * ***************************************************************************/
 #if FEATURE_COMPILE_TO_METHOD_POLYFILL
+using Microsoft.Scripting.Utils;
 using System.Diagnostics;
 using System.Dynamic.Utils;
 
@@ -211,7 +212,7 @@ namespace System.Linq.Expressions.Compiler {
             if (block == null || block is SpilledExpressionBlock) {
                 return;
             }
-            for (int i = 0, n = block.ExpressionCount; i < n; i++) {
+            for (int i = 0, n = block.ExpressionCount(); i < n; i++) {
                 Expression e = block.GetExpression(i);
 
                 var label = e as LabelExpression;
@@ -243,7 +244,7 @@ namespace System.Linq.Expressions.Compiler {
                         var body = (BlockExpression)expression;
                         // omit empty and debuginfo at the end of the block since they
                         // are not going to emit any IL
-                        for (int i = body.ExpressionCount - 1; i >= 0; i--) {
+                        for (int i = body.ExpressionCount() - 1; i >= 0; i--) {
                             expression = body.GetExpression(i);
                             if (Significant(expression)) {
                                 break;

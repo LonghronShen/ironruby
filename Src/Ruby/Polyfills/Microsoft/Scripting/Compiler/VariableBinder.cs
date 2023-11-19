@@ -13,6 +13,7 @@
  *
  * ***************************************************************************/
 #if FEATURE_COMPILE_TO_METHOD_POLYFILL
+using Microsoft.Contracts;
 using Microsoft.Scripting.Utils;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

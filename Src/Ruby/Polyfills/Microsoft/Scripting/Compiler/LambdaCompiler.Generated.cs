@@ -13,6 +13,7 @@
  *
  * ***************************************************************************/
 #if FEATURE_COMPILE_TO_METHOD_POLYFILL
+using Microsoft.Contracts;
 using System.Diagnostics;
 using System.Dynamic.Utils;
 

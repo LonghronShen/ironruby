@@ -20,6 +20,7 @@ using System.Dynamic.Utils;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Globalization;
+using Microsoft.Scripting.Utils;
 
 #if SILVERLIGHT
 using System.Core;
@@ -41,7 +42,7 @@ namespace System.Linq.Expressions.Compiler {
 
             CompilationFlags emitAs = flags & CompilationFlags.EmitAsTypeMask;
 
-            int count = node.ExpressionCount;
+            int count = node.ExpressionCount();
             CompilationFlags tailCall = flags & CompilationFlags.EmitAsTailCallMask;
             for (int index = 0; index < count - 1; index++) {
                 var e = node.GetExpression(index);
@@ -218,7 +219,7 @@ namespace System.Linq.Expressions.Compiler {
             // Otherwise, get the type from the method.
             Type result = node.Comparison.GetParametersCached()[1].ParameterType.GetNonRefType();
             if (node.IsLifted) {
-                result = TypeUtils.GetNullableType(result);
+                result = TypeUtilsEx.GetNullableType(result);
             }
             return result;
         }

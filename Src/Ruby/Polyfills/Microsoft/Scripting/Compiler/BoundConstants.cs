@@ -19,6 +19,7 @@ using System.Diagnostics;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Dynamic.Utils;
+using Microsoft.Scripting.Utils;
 
 #if SILVERLIGHT
 using System.Core;

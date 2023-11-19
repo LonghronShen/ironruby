@@ -13,6 +13,7 @@
  *
  * ***************************************************************************/
 #if FEATURE_COMPILE_TO_METHOD_POLYFILL
+using Microsoft.Scripting.Utils;
 using System;
 using System.Diagnostics;
 using System.Dynamic.Utils;
@@ -76,7 +77,7 @@ namespace System.Linq.Expressions.Compiler {
         private static bool Significant(Expression node) {
             var block = node as BlockExpression;
             if (block != null) {
-                for (int i = 0; i < block.ExpressionCount; i++) {
+                for (int i = 0; i < block.ExpressionCount(); i++) {
                     if (Significant(block.GetExpression(i))) {
                         return true;
                     }
@@ -280,7 +281,7 @@ namespace System.Linq.Expressions.Compiler {
             Label labEnd = _ilg.DefineLabel();
             EmitExpression(b.Left);
             _ilg.Emit(OpCodes.Dup);
-            MethodInfo opFalse = TypeUtils.GetBooleanOperator(b.Method.DeclaringType, "op_False");
+            MethodInfo opFalse = TypeUtilsEx.GetBooleanOperator(b.Method.DeclaringType, "op_False");
             Debug.Assert(opFalse != null, "factory should check that the method exists");
             _ilg.Emit(OpCodes.Call, opFalse);
             _ilg.Emit(OpCodes.Brtrue, labEnd);
@@ -407,7 +408,7 @@ namespace System.Linq.Expressions.Compiler {
             Label labEnd = _ilg.DefineLabel();
             EmitExpression(b.Left);
             _ilg.Emit(OpCodes.Dup);
-            MethodInfo opTrue = TypeUtils.GetBooleanOperator(b.Method.DeclaringType, "op_True");
+            MethodInfo opTrue = TypeUtilsEx.GetBooleanOperator(b.Method.DeclaringType, "op_True");
             Debug.Assert(opTrue != null, "factory should check that the method exists");
             _ilg.Emit(OpCodes.Call, opTrue);
             _ilg.Emit(OpCodes.Brtrue, labEnd);
@@ -635,7 +636,7 @@ namespace System.Linq.Expressions.Compiler {
         private void EmitBranchBlock(bool branch, BlockExpression node, Label label) {
             EnterScope(node);
 
-            int count = node.ExpressionCount;
+            int count = node.ExpressionCount();
             for (int i = 0; i < count - 1; i++) {
                 EmitExpressionAsVoid(node.GetExpression(i));
             }

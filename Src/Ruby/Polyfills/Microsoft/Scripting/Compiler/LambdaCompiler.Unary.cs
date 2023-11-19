@@ -13,6 +13,8 @@
  *
  * ***************************************************************************/
 #if FEATURE_COMPILE_TO_METHOD_POLYFILL
+using Microsoft.Contracts;
+using Microsoft.Scripting.Utils;
 using System;
 using System.Diagnostics;
 using System.Dynamic.Utils;
@@ -78,7 +80,7 @@ namespace System.Linq.Expressions.Compiler {
         private void EmitUnary(UnaryExpression node, CompilationFlags flags) {
             if (node.Method != null) {
                 EmitUnaryMethod(node, flags);
-            } else if (node.NodeType == ExpressionType.NegateChecked && TypeUtils.IsInteger(node.Operand.Type)) {
+            } else if (node.NodeType == ExpressionType.NegateChecked && TypeUtilsEx.IsInteger(node.Operand.Type)) {
                 EmitExpression(node.Operand);
                 LocalBuilder loc = GetLocal(node.Operand.Type);
                 _ilg.Emit(OpCodes.Stloc, loc);
@@ -334,10 +336,10 @@ namespace System.Linq.Expressions.Compiler {
 
         private void EmitUnaryMethod(UnaryExpression node, CompilationFlags flags) {
             if (node.IsLifted) {
-                ParameterExpression v = Expression.Variable(TypeUtils.GetNonNullableType(node.Operand.Type), null);
+                ParameterExpression v = Expression.Variable(TypeUtilsEx.GetNonNullableType(node.Operand.Type), null);
                 MethodCallExpression mc = Expression.Call(node.Method, v);
 
-                Type resultType = TypeUtils.GetNullableType(mc.Type);
+                Type resultType = TypeUtilsEx.GetNullableType(mc.Type);
                 EmitLift(node.NodeType, resultType, mc, new ParameterExpression[] { v }, new Expression[] { node.Operand });
                 _ilg.EmitConvertToType(resultType, node.Type, false);
             } else {

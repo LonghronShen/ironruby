@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace System.Collections.Generic
 {
@@ -11,6 +12,11 @@ namespace System.Collections.Generic
             return Array.AsReadOnly(list);
         }
 #endif
+
+        public static ReadOnlyCollection<T> AsReadOnly<T>(this IEnumerable<T> list)
+        {
+            return new ReadOnlyCollection<T>(list.ToList());
+        }
 
     }
 }

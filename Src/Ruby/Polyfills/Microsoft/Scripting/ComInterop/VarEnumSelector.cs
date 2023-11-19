@@ -13,7 +13,7 @@
  *
  * ***************************************************************************/
 
-#if !SILVERLIGHT && FEATURE_COM // ComObject
+#if !SILVERLIGHT && !NET20_OR_GREATER && FEATURE_COM // ComObject
 
 using System;
 using System.Collections.Generic;

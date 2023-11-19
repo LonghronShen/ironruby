@@ -34,10 +34,17 @@ namespace System.Linq.Expressions.Compiler {
             Type returnType = types[types.Length - 1];
             Type[] parameters = types.RemoveLast();
 
-            TypeBuilder builder = assemblyGen.MakeDelegateType("Delegate" + types.Length);
-            builder.DefineConstructor(CtorAttributes, CallingConventions.Standard, _DelegateCtorSignature).SetImplementationFlags(ImplAttributes);
-            builder.DefineMethod("Invoke", InvokeAttributes, returnType, parameters).SetImplementationFlags(ImplAttributes);
-            return builder.CreateType();
+            if (assemblyGen == null)
+            {
+                TypeBuilder builder = Snippets.Shared.DefineDelegateType($"Delegate{types.Length}");
+                builder.DefineConstructor(CtorAttributes, CallingConventions.Standard, _DelegateCtorSignature).SetImplementationFlags(ImplAttributes);
+                builder.DefineMethod("Invoke", InvokeAttributes, returnType, parameters).SetImplementationFlags(ImplAttributes);
+                return builder.CreateType();
+            }
+            else
+            {
+                return assemblyGen.MakeDelegateType($"Delegate{types.Length}", parameters, returnType);
+            }
         }
     }
 }

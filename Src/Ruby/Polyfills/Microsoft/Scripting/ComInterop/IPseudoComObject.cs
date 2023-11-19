@@ -12,7 +12,7 @@
  *
  *
  * ***************************************************************************/
-
+#if !SILVERLIGHT && !NET20_OR_GREATER && FEATURE_COM
 #if !CLR2
 using System.Linq.Expressions;
 #else
@@ -27,3 +27,4 @@ namespace Microsoft.Scripting.ComInterop {
         DynamicMetaObject GetMetaObject(Expression expression);
     }
 }
+#endif

@@ -285,7 +285,7 @@ namespace System.Linq.Expressions.Compiler {
                 _closureHoistedLocals = _parent.NearestHoistedLocals;
             }
 
-            var hoistedVars = GetVariables().Where(p => Definitions[p] == VariableStorageKind.Hoisted).ToReadOnly();
+            var hoistedVars = GetVariables().Where(p => Definitions[p] == VariableStorageKind.Hoisted).AsReadOnly();
 
             if (hoistedVars.Count > 0) {
                 _hoistedLocals = new HoistedLocals(_closureHoistedLocals, hoistedVars);

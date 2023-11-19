@@ -40,9 +40,14 @@ namespace System.Runtime.CompilerServices {
     /// Generator of PDB debugging information for expression trees.
     /// </summary>
     internal sealed class SymbolDocumentGenerator : DebugInfoGenerator {
+#pragma warning disable CA1823 // Avoid unused private fields
         private Dictionary<SymbolDocumentInfo, ISymbolDocumentWriter> _symbolWriters;
+#pragma warning restore CA1823 // Avoid unused private fields
 
         private ISymbolDocumentWriter GetSymbolWriter(MethodBuilder method, SymbolDocumentInfo document) {
+#if NET || NETSTANDARD
+            throw new NotSupportedException();
+#else
             ISymbolDocumentWriter result;
             if (_symbolWriters == null) {
                 _symbolWriters = new Dictionary<SymbolDocumentInfo, ISymbolDocumentWriter>();
@@ -54,13 +59,18 @@ namespace System.Runtime.CompilerServices {
             }
 
             return result;
+#endif
         }
 
         internal override void MarkSequencePoint(LambdaExpression method, MethodBase methodBase, ILGenerator ilg, DebugInfoExpression sequencePoint) {
+#if NET || NETSTANDARD
+            throw new NotSupportedException();
+#else
             MethodBuilder builder = methodBase as MethodBuilder;
             if (builder != null) {
                 ilg.MarkSequencePoint(GetSymbolWriter(builder, sequencePoint.Document), sequencePoint.StartLine, sequencePoint.StartColumn, sequencePoint.EndLine, sequencePoint.EndColumn);
             }
+#endif
         }
 
         public override void MarkSequencePoint(LambdaExpression method, int ilOffset, DebugInfoExpression sequencePoint) {
@@ -68,7 +78,11 @@ namespace System.Runtime.CompilerServices {
         }
 
         internal override void SetLocalName(LocalBuilder localBuilder, string name) {
+#if NET || NETSTANDARD
+            throw new NotSupportedException();
+#else
             localBuilder.SetLocalSymInfo(name);
+#endif
         }
     }
 }

@@ -13,6 +13,7 @@
  *
  * ***************************************************************************/
 
+#if !SILVERLIGHT && !NET20_OR_GREATER && FEATURE_COM
 using System;
 
 namespace Microsoft.Scripting {
@@ -336,3 +337,4 @@ namespace Microsoft.Scripting {
     #endregion
 
 }
+#endif
