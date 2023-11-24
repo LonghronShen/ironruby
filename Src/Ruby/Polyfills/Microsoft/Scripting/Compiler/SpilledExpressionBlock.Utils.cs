@@ -16,6 +16,7 @@
 using Microsoft.Contracts;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
 
 #if CLR2
 namespace Microsoft.Scripting.Ast.Compiler {
@@ -40,6 +41,7 @@ namespace System.Linq.Expressions.Compiler
 
     internal static class SpilledExpressionBlockHelper
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Expression CreateSpilledExpressionBlock(IList<Expression> expressions)
         {
             return null;

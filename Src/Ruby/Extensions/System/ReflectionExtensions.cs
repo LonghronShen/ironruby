@@ -46,7 +46,7 @@ namespace System
             for (var type = targetType; type != null; type = typeInfo.BaseType)
             {
                 typeInfo = type.GetTypeInfo();
-                var declaredMethods = typeInfo.GetDeclaredMethods(method);
+                var declaredMethods = typeInfo.GetRuntimeMethods().Where(x => x.Name == method).ToList();
                 if (declaredMethods != null)
                 {
                     foreach (var methodInfo in declaredMethods)
