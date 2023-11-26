@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Dynamic.Utils;
 
 #if CLR2
@@ -130,7 +131,7 @@ namespace System.Linq.Expressions.Compiler
         /// the orignal expression or the rewritten expression. Finish will call
         /// Expression.Comma if necessary and return a new Result.
         /// </summary>
-        private class ChildRewriter {
+        internal class ChildRewriter {
             private readonly StackSpiller _self;
             private readonly Expression[] _expressions;
             private int _expressionsCount;
@@ -261,7 +262,7 @@ namespace System.Linq.Expressions.Compiler
         }
 
         [Conditional("DEBUG")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         private void VerifyTemps() {
             _tm.VerifyTemps();
         }

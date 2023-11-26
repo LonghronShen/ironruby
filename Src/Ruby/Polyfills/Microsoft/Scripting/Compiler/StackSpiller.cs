@@ -41,7 +41,7 @@ namespace System.Linq.Expressions.Compiler {
     internal partial class StackSpiller {
 
         // Is the evaluation stack empty?
-        private enum Stack {
+        internal enum Stack {
             Empty,
             NonEmpty
         };
@@ -56,14 +56,14 @@ namespace System.Linq.Expressions.Compiler {
         //   Copy -> copy into a new node
         //   SpillStack -> spill stack into temps
         [Flags]
-        private enum RewriteAction {
+        internal enum RewriteAction {
             None = 0,
             Copy = 1,
             SpillStack = 3,
         }
 
         // Result of a rewrite operation. Always contains an action and a node.
-        private struct Result {
+        internal struct Result {
             internal readonly RewriteAction Action;
             internal readonly Expression Node;
 

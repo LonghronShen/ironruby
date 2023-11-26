@@ -2,6 +2,10 @@
 using System;
 using System.Reflection;
 
+using System.Linq.Expressions.Compiler;
+using static System.Linq.Expressions.Compiler.StackSpiller;
+
+
 #if !CLR2
 using System.Linq.Expressions;
 #else
@@ -39,6 +43,23 @@ namespace Microsoft.Scripting.Utils
             }
 
             throw new NotSupportedException();
+        }
+
+        public static IndexExpression CreateIndexExpression(ChildRewriter cr, )
+        {
+
+        }
+
+        public static BinaryExpression CreateAssignBinaryExpression()
+        {
+            new AssignBinaryExpression(
+                    new IndexExpression(
+                        cr[0],                              // Object
+                        index.Indexer,
+                        cr[1, -2]                           // arguments                        
+                    ),
+                    cr[-1]                                  // value
+                );
         }
 
     }
