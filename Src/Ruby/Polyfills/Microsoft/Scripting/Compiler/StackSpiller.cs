@@ -350,7 +350,7 @@ namespace System.Linq.Expressions.Compiler {
 
             // If there's an instance, it executes on the stack in current state
             // and rest is executed on non-empty stack.
-            // Otherwise the stack is left unchaged.
+            // Otherwise the stack is left unchanged.
             cr.Add(lvalue.Expression);
 
             cr.Add(node.Right);
@@ -512,7 +512,7 @@ namespace System.Linq.Expressions.Compiler {
             NewExpression node = (NewExpression)expr;
 
             // The first expression starts on a stack as provided by parent,
-            // rest are definitely non-emtpy (which ChildRewriter guarantees)
+            // rest are definitely non-empty (which ChildRewriter guarantees)
             ChildRewriter cr = new ChildRewriter(this, stack, node.Arguments.Count);
             cr.AddArguments(node);
 
