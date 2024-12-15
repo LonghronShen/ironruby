@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<TargetFrameworks>net35;net40;net7</TargetFrameworks>
+		<TargetFrameworks>net35;net40;net7;net8;net9</TargetFrameworks>
 		<RootNamespace>IronRuby</RootNamespace>
 		<AssemblyName>ir</AssemblyName>
 
@@ -15,5 +15,5 @@
 
 	<Import Project="../../Build/net35.props" Condition=" '$(TargetFramework)' == 'net35' " />
 	<Import Project="../../Build/net40.props" Condition=" '$(TargetFramework)' == 'net40' " />
-	<Import Project="../../Build/netstandard2.0.props" Condition=" '$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'net7' " />
+	<Import Project="../../Build/netstandard2.0.props" Condition=" '$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'net7' or '$(TargetFramework)' == 'net8' or '$(TargetFramework)' == 'net9' " />
 </Project>

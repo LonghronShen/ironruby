@@ -8,7 +8,7 @@
 		<PackageProjectUrl>https://github.com/LognhronShen/ironruby</PackageProjectUrl>
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		
+
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -26,6 +26,7 @@
 		<NoWarn>1591;1584;1574;1685;1573;0618;1658;1570;1587</NoWarn>
 		<ErrorReport>prompt</ErrorReport>
 		<WarningLevel>4</WarningLevel>
+		<EnableWindowsTargeting>true</EnableWindowsTargeting>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -37,7 +38,7 @@
 		<None Include="../Public/README.md" Pack="true" PackagePath="\"/>
 		<None Include="../Public/*.txt" Pack="true" PackagePath="\"/>
 	</ItemGroup>
-	
+
 	<ItemGroup Condition=" $(TargetFramework) != '' ">
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
 		<PackageReference Include="GitVersion.MsBuild" Version="5.6.10*" PrivateAssets="All" />

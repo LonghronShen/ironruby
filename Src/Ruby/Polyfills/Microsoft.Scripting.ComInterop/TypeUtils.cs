@@ -27,7 +27,7 @@ using System.Reflection;
 namespace Microsoft.Scripting.ComInterop {
 
     internal static class TypeUtils {
-        private const BindingFlags AnyStatic = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+        internal const BindingFlags AnyStatic = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
         internal const MethodAttributes PublicStatic = MethodAttributes.Public | MethodAttributes.Static;
 
         //CONFORMING

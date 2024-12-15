@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFrameworks>net35;net40;net7-windows</TargetFrameworks>
+		<TargetFrameworks>net35;net40;net7-windows;net8-windows;net9-windows</TargetFrameworks>
 		<RootNamespace>IronRuby</RootNamespace>
 		<AssemblyName>irw</AssemblyName>
 
@@ -17,5 +17,5 @@
 
 	<Import Project="../../Build/net35.props" Condition=" '$(TargetFramework)' == 'net35' " />
 	<Import Project="../../Build/net40.props" Condition=" '$(TargetFramework)' == 'net40' " />
-	<Import Project="../../Build/netstandard2.0.props" Condition=" '$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'net7' " />
+	<Import Project="../../Build/netstandard2.0.props" Condition=" '$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'net7-windows' or '$(TargetFramework)' == 'net8-windows' or '$(TargetFramework)' == 'net9-windows' " />
 </Project>

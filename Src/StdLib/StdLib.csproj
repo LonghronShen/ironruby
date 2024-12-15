@@ -1,6 +1,8 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net35;net40;portable-net403+sl5+win8+wpa81+wp8</TargetFrameworks>
+		<TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard2.0;net35</TargetFrameworks>
+		<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;net35;net40;portable-net403+sl5+win8+wpa81+wp8</TargetFrameworks>
+
 		<AssemblyName>IronRuby.StdLib</AssemblyName>
 
 		<PackageId>IronRuby.StdLib</PackageId>
