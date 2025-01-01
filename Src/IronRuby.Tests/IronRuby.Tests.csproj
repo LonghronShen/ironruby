@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<TargetFrameworks>net40</TargetFrameworks>
+		<TargetFrameworks>net40;net9</TargetFrameworks>
 		<RootNamespace>IronRuby.Tests</RootNamespace>
 		<AssemblyName>IronRuby.Tests</AssemblyName>
 
@@ -16,7 +16,7 @@
 		<PackageReference Include="coverlet.collector" Version="1.3.0" />
 	</ItemGroup>-->
 
-	<ItemGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
 		<Reference Include="Microsoft.CSharp" />
 	</ItemGroup>
 
@@ -28,4 +28,5 @@
 	<Import Project="../../Build/net35.props" Condition=" '$(TargetFramework)' == 'net35' " />
 	<Import Project="../../Build/net40.props" Condition=" '$(TargetFramework)' == 'net40' " />
 	<Import Project="../../Build/netstandard2.0.props" Condition=" '$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'net7' or '$(TargetFramework)' == 'net48' " />
+	<Import Project="../../Build/net9.props" Condition=" '$(TargetFramework)' == 'net9' " />
 </Project>

@@ -79,4 +79,12 @@
 	<PropertyGroup>
 		<DefineConstants>$(DefineConstants);$(Features);$(PlatformSymbols)</DefineConstants>
 	</PropertyGroup>
+
+	<PropertyGroup>
+		<EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="System.Runtime.Serialization.Formatters" Version="9.0.0-*" />
+	</ItemGroup>
 </Project>

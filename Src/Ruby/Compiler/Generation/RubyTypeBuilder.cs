@@ -13,20 +13,21 @@
  *
  * ***************************************************************************/
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Dynamic;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.Serialization;
+using IronRuby.Builtins;
+using IronRuby.Runtime.Calls;
+using IronRuby.Runtime;
 using Microsoft.Scripting.Generation;
 using Microsoft.Scripting.Runtime;
 using Microsoft.Scripting.Utils;
-using IronRuby.Builtins;
-using IronRuby.Runtime;
-using IronRuby.Runtime.Calls;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Dynamic;
+using System.Linq;
+using System.Reflection.Emit;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System;
 
 namespace IronRuby.Compiler.Generation {
     internal class RubyTypeBuilder : IFeatureBuilder {
@@ -433,7 +434,13 @@ namespace IronRuby.Compiler.Generation {
         private void DefineCustomTypeDescriptor() {
             _tb.AddInterfaceImplementation(typeof(ICustomTypeDescriptor));
 
-            foreach (MethodInfo m in typeof(ICustomTypeDescriptor).GetMethods()) {
+#if NETFRAMEWORK
+            var methods = typeof(ICustomTypeDescriptor).GetMethods();
+#else
+            var methods = typeof(ICustomTypeDescriptor).GetMethods().Where(x => !x.IsSpecialName).ToList();
+#endif
+
+            foreach (MethodInfo m in methods) {
                 ImplementCTDOverride(m);
             }
         }
@@ -457,9 +464,9 @@ namespace IronRuby.Compiler.Generation {
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region Utils
+            #region Utils
 
         private static ILGen/*!*/ DefineMethodOverride(TypeBuilder/*!*/ tb, MethodInfo/*!*/ decl) {
             MethodBuilder impl;

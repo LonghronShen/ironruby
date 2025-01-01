@@ -17,18 +17,19 @@
 using dynamic = System.Object;
 #endif
 
-using Microsoft.Scripting.Utils;
-using Microsoft.Scripting.Hosting;
-using Microsoft.Scripting.Hosting.Providers;
-using Microsoft.Scripting.Runtime;
-using IronRuby.Runtime;
 using IronRuby.Builtins;
 using IronRuby.Hosting;
-using System.ComponentModel;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using IronRuby.Runtime;
+using Microsoft.Scripting.Hosting.Providers;
+using Microsoft.Scripting.Hosting;
+using Microsoft.Scripting.Runtime;
+using Microsoft.Scripting.Utils;
 using Microsoft.Scripting;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Text;
+using System;
 
 #if FEATURE_REMOTING
 using System.Runtime.Remoting;
@@ -48,6 +49,12 @@ namespace IronRuby {
     /// a host that doesn't depend on a particular language and can host any DLR based language.
     /// </remarks>
     public static class Ruby {
+        static Ruby() {
+#if !NETFRAMEWORK && !SILVERLIGHT
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+#endif
+        }
+
         /// <summary>
         /// Creates a new script runtime configured using .NET configuration files.
         /// A default IronRuby configuration is added if not found anywhere in the .NET configuration files.

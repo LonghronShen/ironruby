@@ -453,7 +453,7 @@ namespace IronRuby.Runtime {
             _defaultExternalEncoding = _options.DefaultEncoding ?? _options.LocaleEncoding;
             _globalScope = DomainManager.Globals;
             _loader = new Loader(this);
-            _emptyScope = new RubyTopLevelScope(this);            
+            _emptyScope = new RubyTopLevelScope(this);
             _currentException = null;
             _currentSafeLevel = 0;
             _childProcessExitStatus = null;

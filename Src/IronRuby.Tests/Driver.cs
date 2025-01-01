@@ -86,6 +86,7 @@ namespace IronRuby.Tests {
             languageSetup.Options["NoAdaptiveCompilation"] = _driver.NoAdaptiveCompilation;
             languageSetup.Options["CompilationThreshold"] = _driver.CompilationThreshold;
             languageSetup.Options["Verbosity"] = 2;
+            languageSetup.Options["StandardLibrary"] = ".";
 
             _runtime = Ruby.CreateRuntime(runtimeSetup);
             _engine = Ruby.GetEngine(_runtime);
@@ -278,6 +279,7 @@ namespace IronRuby.Tests {
             string culture = Environment.GetEnvironmentVariable("IR_CULTURE");
 
             if (args.Contains("/partial")) {
+#if NETFRAMEWORK
                 Console.WriteLine("Running in partial trust");
 
                 PermissionSet ps = CreatePermissionSet();
@@ -290,6 +292,9 @@ namespace IronRuby.Tests {
                 domain.DoCallBack(new CrossAppDomainDelegate(loader.Run));
                 
                 Environment.ExitCode = loader.ExitCode;
+#else
+                throw new NotSupportedException("Partial trust is not supported on this platform.");
+#endif
             } else {
                 if (!String.IsNullOrEmpty(culture)) {
                     Thread.CurrentThread.CurrentCulture = new CultureInfo(culture, false);

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "IronRuby.Tests": {
+      "commandName": "Project",
+      "commandLineArgs": "/py-"
+    }
+  }
+}

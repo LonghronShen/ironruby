@@ -337,6 +337,9 @@ namespace IronRuby.Compiler.Generation
 
         public Type FinishType()
         {
+#if NETSTANDARD
+            throw new NotSupportedException("Not supporting create new CLR types on this platform.");
+#else
             if (_dynamicSiteFactories.Count > 0)
             {
                 GetCCtor();
@@ -351,13 +354,10 @@ namespace IronRuby.Compiler.Generation
                     );
 
                     _dynamicSiteFactories.Add(Expression.Empty());
-#if !NETSTANDARD && !NET
-                    Expression.Lambda(Expression.Block(_dynamicSiteFactories)).CompileToMethod(createSitesImpl);
-#else
-#if NET9_0_OR_GREATER
-                    //Expression.Lambda(Expression.Block(_dynamicSiteFactories)).CompileToMethod(createSitesImpl);
-#endif
-#endif
+
+                    var block = Expression.Lambda(Expression.Block(_dynamicSiteFactories));
+                    this.CompileLambdaToMethod(block, createSitesImpl);
+
                     _cctor.EmitCall(createSitesImpl);
 
                     _dynamicSiteFactories.Clear();
@@ -365,15 +365,18 @@ namespace IronRuby.Compiler.Generation
 
                 _cctor.Emit(OpCodes.Ret);
             }
-#if NETSTANDARD
-            throw new NotSupportedException("Not supporting create new CLR types on this platform.");
-#else
+
             Type result = _tb.CreateType();
             return result;
 #endif
         }
 
-        internal protected ILGen CreateILGen(ILGenerator il)
+        protected virtual void CompileLambdaToMethod(LambdaExpression/*!*/ self, MethodBuilder/*!*/ methodBuilder)
+        {
+            self.CompileToMethod(methodBuilder);
+        }
+
+        protected internal ILGen CreateILGen(ILGenerator il)
         {
             // TODO: Debugging support
             return new ILGen(il);

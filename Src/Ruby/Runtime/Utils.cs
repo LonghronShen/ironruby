@@ -1052,16 +1052,34 @@ namespace IronRuby.Runtime {
             var decoder = encoding.GetDecoder();
             var fallback = new CheckDecoderFallback();
             decoder.Fallback = fallback;
-            decoder.GetCharCount(bytes, start, count, true);
-            return fallback.HasInvalidCharacters;
+
+            try {
+                decoder.GetCharCount(bytes, start, count, true);
+                return fallback.HasInvalidCharacters;
+            }
+            catch (DecoderFallbackException) {
+                return true;
+            }
+            catch (Exception ex) {
+                throw;
+            }
         }
 
         internal static bool ContainsInvalidCharacters(char[]/*!*/ chars, int start, int count, Encoding/*!*/ encoding) {
             var encoder = encoding.GetEncoder();
             var fallback = new CheckEncoderFallback();
             encoder.Fallback = fallback;
-            encoder.GetByteCount(chars, start, count, true);
-            return fallback.HasInvalidCharacters;
+
+            try {
+                encoder.GetByteCount(chars, start, count, true);
+                return fallback.HasInvalidCharacters;
+            }
+            catch (EncoderFallbackException) {
+                return true;
+            }
+            catch (Exception ex) {
+                throw;
+            }
         }
 #else
         internal static bool ContainsInvalidCharacters(byte[]/*!*/ bytes, int start, int count, Encoding/*!*/ encoding) {

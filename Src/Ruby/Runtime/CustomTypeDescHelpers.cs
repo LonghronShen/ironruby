@@ -48,6 +48,24 @@ namespace IronRuby.Runtime {
 
         [Emitted]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "self")]
+        public static TypeConverter GetConverterFromRegisteredType(object self) {
+            return null;
+        }
+
+        [Emitted]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "self")]
+        public static EventDescriptorCollection GetEventsFromRegisteredType(object self) {
+            return null;
+        }
+
+        [Emitted]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "self")]
+        public static PropertyDescriptorCollection GetPropertiesFromRegisteredType(object self) {
+            return null;
+        }
+
+        [Emitted]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "self")]
         public static AttributeCollection GetAttributes(object self) {
             return AttributeCollection.Empty;
         }

@@ -106,7 +106,9 @@ namespace IronRuby.Tests {
                 Interpreter_JumpFromFinally1,
                 Interpreter_JumpFromFinally2,
                 Interpreter2,
+#if NETFRAMEWORK
                 Interpreter3,
+#endif
                 Interpreter4,
                 Interpreter5,
                 Interpreter6,

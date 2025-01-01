@@ -231,7 +231,10 @@ namespace IronRuby.Tests {
 
             foreach (var e in new[] { 
                 RubyEncodingOps.UTF_32LE, RubyEncodingOps.UTF_32BE, RubyEncodingOps.UTF_16LE, RubyEncodingOps.UTF_16BE,
-                RubyEncodingOps.UTF_8, RubyEncodingOps.UTF_7
+                RubyEncodingOps.UTF_8,
+#if NETFRAMEWORK
+                RubyEncodingOps.UTF_7
+#endif
             }) {
                 a = MutableString.Create("abcd", e);
                 Assert(!a.HasSurrogates());
@@ -1032,7 +1035,13 @@ namespace IronRuby.Tests {
                 a.Remove(s.Length, 2);
 
                 Action<string> test1 = (value) => {
-                    Assert(a.LastIndexOf(BinaryEncoding.Instance.GetBytes(value)) == s.LastIndexOf(value));
+                    Assert(
+#if NET5_0_OR_GREATER
+                        a.LastIndexOf(BinaryEncoding.Instance.GetBytes(value)) == s.LastIndexOf(value) + (value == "" ? -1 : 0)
+#else
+                        a.LastIndexOf(BinaryEncoding.Instance.GetBytes(value)) == s.LastIndexOf(value)
+#endif
+                    );
                 };
 
                 Action<string, int> test2 = (value, start) => {
@@ -1040,7 +1049,11 @@ namespace IronRuby.Tests {
                 };
 
                 Action<string, int, int> test3 = (value, start, count) => {
+#if NET5_0_OR_GREATER
+                    Assert(a.LastIndexOf(BinaryEncoding.Instance.GetBytes(value), start, count) == s.LastIndexOf(value, start, count) + (value == "" ? -1 : 0));
+#else
                     Assert(a.LastIndexOf(BinaryEncoding.Instance.GetBytes(value), start, count) == s.LastIndexOf(value, start, count));
+#endif
                 };
 
                 test1("");
@@ -1249,7 +1262,11 @@ namespace IronRuby.Tests {
             foreach (var e in new[] { 
                 RubyEncodingOps.UTF_16LE, RubyEncodingOps.UTF_16BE, 
                 RubyEncodingOps.UTF_32LE, RubyEncodingOps.UTF_32BE,
-                RubyEncodingOps.UTF_7, RubyEncodingOps.UTF_8 }) {
+                RubyEncodingOps.UTF_8,
+#if NETFRAMEWORK
+                RubyEncodingOps.UTF_7,  
+#endif
+            }) {
 
                 TestChars(
                     MutableString.CreateMutable("α" + s_u12345 + "xβ", e),
