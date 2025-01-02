@@ -35,8 +35,10 @@
 
 	<ItemGroup Condition=" $(GeneratePackageOnBuild) == 'true' ">
 		<None Include="../../logo.png" Pack="true" PackagePath="\"/>
-		<None Include="../Public/README.md" Pack="true" PackagePath="\"/>
+		<None Include="../Public/*.md" Pack="true" PackagePath="\"/>
 		<None Include="../Public/*.txt" Pack="true" PackagePath="\"/>
+		<None Include="../Public/*.html" Pack="true" PackagePath="\"/>
+		<None Include="../Public/*.rtf" Pack="true" PackagePath="\"/>
 	</ItemGroup>
 
 	<ItemGroup Condition=" $(TargetFramework) != '' ">
